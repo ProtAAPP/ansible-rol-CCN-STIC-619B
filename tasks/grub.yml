@@ -1,0 +1,53 @@
+- name: Comprobar si la password de grub está configurada en grub (comprobación sacada de CLARA)
+  become: true
+  ansible.builtin.shell:
+    cmd: grep -qi "root.*sha512" /etc/grub.d/40_custom
+  register: pass_grub_set
+  failed_when: pass_grub_set.stderr != ''
+  changed_when: pass_grub_set.rc != 0
+- name: Crear password de grub para root
+  become: true
+  ansible.builtin.expect:
+    command: /bin/bash -c "grub2-mkpasswd-pbkdf2 | tee -a hash"
+    responses:
+      (?i)password|contraseña: "{{ grub_root_pass }}"
+  register: hash_grub_root_pass
+  when: pass_grub_set.rc != 0
+- name: Añadir root a superusers y su contraseña a /etc/grub.d/40_custom
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/grub.d/40_custom
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - { regexp: '^set superusers=', line: 'set superusers="root"' }
+    - { regexp: '^password_pbkdf2 root', line: 'password_pbkdf2 root {{ (hash_grub_root_pass.stdout_lines | last).split(" ") | last }}' }
+  when: hash_grub_root_pass.changed
+
+- name: Comprobar si uefi está instalado
+  ansible.builtin.stat:
+    path: /sys/firmware/efi
+  register: uefi
+- name: Configuración de grub
+  become: true
+  when: not uefi.stat.exists
+  block:
+    - name: Reconfigurar grub
+      ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
+      when: hash_grub_root_pass.changed
+    - name: Permisos del fichero de configuración de grub
+      ansible.builtin.file:
+        path: "/boot/grub2/grub.cfg"
+        mode: 0600
+
+- name: Configuración de grub con UEFI
+  become: true
+  when: uefi.stat.exists
+  block:
+    - name: Reconfigurar grub con UEFI
+      ansible.builtin.command: grub2-mkconfig -o /boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg
+      when: hash_grub_root_pass.changed
+    - name: Permisos del fichero de configuración de grub con UEFI
+      ansible.builtin.file:
+        path: "/boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg"
+        mode: 0600

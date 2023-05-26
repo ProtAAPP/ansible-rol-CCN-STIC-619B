@@ -1,0 +1,27 @@
+- name: Configuración de audit.rules
+  become: true
+  ansible.builtin.template:
+    src: audit.rules.j2
+    dest: "/etc/audit/rules.d/audit.rules"
+    backup: true
+    mode: 0600
+  register: reglas_audit_resultado
+  notify:
+    - Reiniciar_audit
+- name: Configuración del fichero auditd.conf
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/audit/auditd.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    backup: true
+  loop:
+    - { regexp: '^max_log_file .*', line: 'max_log_file = 10' }
+    - { regexp: '^num_logs.*', line: 'num_logs = 12' }
+    - { regexp: '^max_log_file_action.*', line: 'max_log_file_action = ROTATE' }
+  notify:
+    - Reiniciar_audit
+- name: Habilitar servicio auditd
+  ansible.builtin.systemd:
+    name: auditd
+    enabled: true

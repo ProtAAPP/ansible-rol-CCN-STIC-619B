@@ -1,0 +1,30 @@
+- name: Instalar yum-utils para trabajar
+  become: true
+  ansible.builtin.dnf:
+    name: yum-utils
+    state: present
+
+- name: Eliminar paquetes instalados como dependencias que ya no son necesarias
+  become: true
+  ansible.builtin.dnf:
+    autoremove: true
+
+- name: Limpiar ficheros temporales de los repositorios
+  become: true
+  ansible.builtin.command: dnf clean all
+  register: comando_output
+  changed_when: comando_output.rc == 0
+
+- name: Limpiar paquetes huérfanos
+  become: true
+  ansible.builtin.shell:
+    cmd: "dnf -y remove `package-cleanup --orphans`"
+  register: comando_output
+  changed_when: comando_output.rc == 0
+
+- name: Limpiar paquetes sueltos
+  become: true
+  ansible.builtin.shell:
+    cmd: "dnf -y remove `package-cleanup --leaves`"
+  register: comando_output
+  changed_when: comando_output.rc == 0

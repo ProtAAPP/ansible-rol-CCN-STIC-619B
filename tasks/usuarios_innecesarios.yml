@@ -1,0 +1,25 @@
+- name: Eliminación de usuarios innecesarios
+  become: true
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ usuarios_innecesarios }}"
+- name: Eliminación de otros usuarios innecesarios
+  become: true
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: true
+  with_items: "{{ otros_usuarios_innecesarios }}"
+  when: otros_usuarios_innecesarios is defined
+- name: Eliminación de grupos innecesarios
+  become: true
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ grupos_innecesarios }}"
+- name: Asignando shell a usuarios
+  ansible.builtin.user:
+    name: "{{ item.user }}"
+    shell: "{{ item.shell }}"
+  loop: "{{ shell_usuarios }}"

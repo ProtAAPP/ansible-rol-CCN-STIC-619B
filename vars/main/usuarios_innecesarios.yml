@@ -1,0 +1,26 @@
+usuarios_innecesarios:
+  - news
+  - games
+  - floppy
+# otros_usuarios_innecesarios:
+  # - netdump    #userdel -r netdump
+  # - sync       #userdel -r sync
+  # - rpc        #userdel -r rpc
+  # - dbus       #userdel -r dbus
+  # - gopher     #userdel -r gopher
+  # - ftp        #userdel -r ftp si desinstalamos el ftp
+  # - lp         #userdel -r lp
+  # - uucp       #userdel -r uucp
+  # - pcap       #userdel -r pcap
+  # - haldaemon  #userdel -r haldaemon
+  # - sshd       #userdel -r sshd si desinstalamos el ssh
+  # - mail       #userdel -r mail
+  # - chrony     #userdel -r chrony
+  # - geoclue    #userdel -r geoclue
+grupos_innecesarios:
+  - games
+  - floppy
+shell_usuarios:
+  - { user: 'root', shell: '/bin/bash' }
+  - { user: 'shutdown', shell: '/sbin/shutdown' }
+  - { user: 'halt', shell: '/sbin/halt' }

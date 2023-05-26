@@ -1,0 +1,5 @@
+---
+- name: Reiniciar_audit
+  ansible.builtin.include_tasks: reglas_audit.yml
+- name: Reiniciar_host
+  ansible.builtin.include_tasks: parametros_del_kernel.yml

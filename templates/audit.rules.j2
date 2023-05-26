@@ -1,0 +1,59 @@
+# audit reglas ejecución
+-w /etc/passwd -p wa -k passwd_changes
+-w /etc/selinux/ -p wa -k selinux_changes
+-w /usr/local/sbin -p x -k eject_commands
+-w /usr/local/bin -p x -k eject_commands
+-w /bin -p x -k eject_commands
+-w /sbin -p x -k eject_commands
+-w /usr/sbin -p x -k eject_commands
+-w /usr/bin -p x -k eject_commands
+
+# audit reglas módulos
+-w /usr/sbin/insmod -p x -k modules
+-w /usr/sbin/rmmod -p x -k modules
+-w /usr/sbin/modprobe -p x -k modules
+-a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+
+# audit reglas tiempo
+-a always,exit -F arch=b64 -S adjtimex -k audit_time_rules
+-a always,exit -F arch=b64 -S settimeofday -k audit_time_rules
+-a always,exit -F arch=b64 -S adjtimex -S settimeofday -S clock_settime -k audit_time_rules
+-a always,exit -F arch=b64 -S clock_settime -k audit_time_rules
+-w /etc/localtime -p wa -k audit_time_rules
+
+# audit reglas modificación grupos de usuarios
+-w /etc/group -p wa -k audit_rules_usergroup_modification
+-w /etc/passwd -p wa -k audit_rules_usergroup_modification
+-w /etc/gshadow -p wa -k audit_rules_usergroup_modification
+-w /etc/shadow -p wa -k audit_rules_usergroup_modification
+-w /etc/security/opasswd -p wa -k audit_rules_usergroup_modification
+
+# audit reglas modificación red
+-a always,exit -F arch=b64 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+-w /etc/issue -p wa -k audit_rules_networkconfig_modification
+-w /etc/issue.net -p wa -k audit_rules_networkconfig_modification
+-w /etc/hosts -p wa -k audit_rules_networkconfig_modification
+-w /etc/sysconfig/network -p wa -k audit_rules_networkconfig_modification
+
+# audit reglas control de acceso – CENTOS 8
+-a always,exit -F arch=b64 -F auid=0 -S unlink -S unlinkat -S rename -S renameat -k root_delete
+-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -k user_delete
+-a always,exit -F arch=b64 -S chmod -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -k change_perms
+-a always,exit -F arch=b64 -S chown -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S fchmod -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S fchown -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S fchownat -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S fsetxattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S lremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S lsetxattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S removexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S setxattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
+-a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
+-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k export
+-a always,exit -F arch=b64 -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete
+-w /etc/sudoers -p wa -k actions

@@ -1,0 +1,28 @@
+- name: Sistemas con categoría ENS básica, media o ens_alta
+  tags:
+    - ens_basica
+    - ens_media
+    - ens_alta
+  block:
+    - name: Configurar grub
+      ansible.builtin.include_tasks: grub.yml
+    - name: Eliminación de paquetes huérfanos
+      ansible.builtin.include_tasks: paquetes_huerfanos.yml
+    - name: Eliminación de usuarios innecesarios
+      ansible.builtin.include_tasks: usuarios_innecesarios.yml
+
+
+- name: Sistemas con categoría ENS media y alta
+  tags:
+    - ens_media
+    - ens_alta
+  block:
+    - name: Configuración de las reglas de audit
+      ansible.builtin.include_tasks: reglas_audit.yml
+
+- name: Sistemas con categoría ENS alta
+  tags:
+    - ens_alta
+  block:
+    - name: Configuración de los parámetros del kernel
+      ansible.builtin.include_tasks: parametros_del_kernel.yml

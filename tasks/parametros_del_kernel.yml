@@ -1,0 +1,36 @@
+- name: Crear directorio para guardar archivos originales
+  become: true
+  ansible.builtin.file:
+    path: /etc/sysctl.d_backup
+    state: directory
+    mode: 0755
+
+- name: Hacer backup de los ficheros de configuración originales
+  become: true
+  ansible.builtin.copy:
+    remote_src: true
+    src: /etc/sysctl.d
+    dest: /etc/sysctl.d_backup
+    mode: preserve
+
+- name: Configuración de /etc/sysctl.conf
+  become: true
+  ansible.builtin.template:
+    src: sysctl.conf.j2
+    dest: "/etc/sysctl.conf"
+    backup: true
+    mode: 0644
+  register: parametros_kernel_modificados
+  notify:
+    - Reiniciar_host
+
+- name: Mostrar /etc/sysctl.conf
+  when: parametros_kernel_modificados.changed
+  block:
+    - name: Obtener contenido de /etc/sysctl.conf
+      ansible.builtin.command: cat /etc/sysctl.conf
+      register: contenido_fichero_sysctl
+      changed_when: contenido_fichero_sysctl.rc == 0
+    - name: Sacar por pantalla el contenido de /etc/sysctl.conf
+      ansible.builtin.debug:
+        var: contenido_fichero_sysctl.stdout_lines
