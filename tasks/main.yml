@@ -11,7 +11,6 @@
     - name: Eliminación de usuarios innecesarios
       ansible.builtin.include_tasks: usuarios_innecesarios.yml
 
-
 - name: Sistemas con categoría ENS media y alta
   tags:
     - ens_media
@@ -24,5 +23,7 @@
   tags:
     - ens_alta
   block:
+    - name: Configuración de los reintentos de login
+      ansible.builtin.include_tasks: intentos_fallidos.yml
     - name: Configuración de los parámetros del kernel
       ansible.builtin.include_tasks: parametros_del_kernel.yml

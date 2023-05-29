@@ -1,0 +1,89 @@
+- name: Obtener la fecha y hora actual
+  shell: date +"%y%m%d-%H:%M:%S"
+  register: current_time
+
+- name: Crear directorio de copia de seguridad
+  file:
+    path: "/etc/pam.d_bakup_{{ current_time.stdout }}"
+    state: directory
+
+- name: Realizar copia de seguridad de los archivos de /etc/pam.d
+  copy:
+    src: "/etc/pam.d/"
+    dest: "/etc/pam.d_bakup_{{ current_time.stdout }}/"
+    remote_src: true
+
+- name: Configurar pam_faillock.so
+  community.general.pamd:
+    name: "{{item}}"
+    type: auth
+    control: required
+    module_path: pam_deny.so
+    state: after
+    new_type: auth
+    new_control: required
+    new_module_path: pam_faillock.so
+    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time=0"
+  loop:
+    - password-auth
+    - system-auth
+  register: loopresult
+
+- name: Configurar pam_faillock.so para authfail
+  community.general.pamd:
+    name: password-auth
+    type: auth
+    control: required
+    module_path: pam_faillock.so
+    state: after
+    new_type: auth
+    new_control: "[default=die]"
+    new_module_path: pam_faillock.so
+    module_arguments: "authfail deny=8 even_deny_root unlock_time=0"
+  loop:
+    - password-auth
+    - system-auth
+  register: loopresult
+
+- name: Configurar pam_faillock.so para account
+  community.general.pamd:
+    name: password-auth
+    type: account
+    control: required
+    module_path: pam_unix.so
+    state: after
+    new_type: account
+    new_control: required
+    new_module_path: pam_faillock.so
+  loop:
+    - password-auth
+    - system-auth
+  register: loopresult
+
+- name: Configurar pam_pwhistory.so
+  community.general.pamd:
+    name: password-auth
+    type: password
+    control: required
+    module_path: pam_deny.so
+    state: after
+    new_type: password
+    new_control: requisite
+    new_module_path: pam_pwhistory.so
+    module_arguments: "debug use_authtok remember=25 retry=8"
+  loop:
+    - password-auth
+    - system-auth
+  register: loopresult
+
+- name: Configurar pam_pwquality.so
+  community.general.pamd:
+    name: password-auth
+    type: password
+    control: requisite
+    module_path: pam_pwquality.so
+    module_arguments: "try_first_pass local_users_only retry=3 authtok_type="
+  loop:
+    - password-auth
+    - system-auth
+  register: loopresult
