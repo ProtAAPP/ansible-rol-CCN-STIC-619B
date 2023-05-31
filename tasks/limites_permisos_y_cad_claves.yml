@@ -1,0 +1,71 @@
+- name: Realizar copia de seguridad de los archivos de /etc/security/limits.conf
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ item }}_bakup"
+    mode: preserve
+    backup: true
+    remote_src: true
+  loop:
+    - /etc/security/limits.conf
+    - /etc/login.defs
+    - /etc/security/pwquality.conf
+
+- name: Establecer el valor de core
+  community.general.pam_limits:
+    domain: "*"
+    limit_type: "{{ item }}"
+    limit_item: core
+    value: 0
+  loop:
+    - soft
+    - hard
+
+- name: Duración, longitud y cifrado de la clave
+  ansible.builtin.lineinfile:
+    dest: "/etc/login.defs"
+    regexp: "{{ item.search }}"
+    line: "{{ item.replace }}"
+    state: present
+  with_items:
+    - { search: "PASS_MAX_DAYS", replace: PASS_MAX_DAYS 60 }
+    - { search: "PASS_MIN_DAYS", replace: PASS_MIN_DAYS 2 }
+    - { search: "PASS_WARN_AGE", replace: PASS_WARN_AGE 10 }
+    - { search: "PASS_MIN_LEN", replace: PASS_MIN_LEN 10 }
+    - { search: "ENCRYPT_METHOD", replace: ENCRYPT_METHOD SHA512 }
+
+- name: Complejidad de la clave
+  ansible.builtin.lineinfile:
+    dest: "/etc/security/pwquality.conf"
+    regexp: "{{ item.search }}"
+    line: "{{ item.replace }}"
+    state: present
+  with_items:
+    - { search: "minlen", replace: minlen 10 }
+    - { search: "dcredit", replace: dcredit -1 }
+    - { search: "ucredit", replace: ucredit -1 }
+    - { search: "lcredit", replace: lcredit -1 }
+
+- name: Obtener lista de usuarios normales (UID > 1000)
+  ansible.builtin.command: awk -F{{ ':' }} '$1 != "nobody" && $3 >= 1000 {print $1}' /etc/passwd
+  register: users_list
+  changed_when: false
+
+- name: Modificar caducidad clave para usuarios existentes y forzar el cambio
+  ansible.builtin.command: /usr/bin/chage -m 2 -M 60 -W 10 -d 0 "{{ item }}"
+  loop: "{{ users_list.stdout_lines }}"
+  loop_control:
+    loop_var: item
+  when: users_list is succeeded
+  register: chage_result
+  changed_when: true
+
+- name: Cambiar permisos de los directorios home de los usuarios existentes
+  ansible.builtin.file:
+    path: "/home/{{ username }}"
+    state: directory
+    group: "{{ username }}"
+    mode: "g-w,o-rwx"
+  loop: "{{ users_list.stdout_lines }}"
+  loop_control:
+    loop_var: username
+  when: users_list is succeeded
