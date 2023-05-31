@@ -1,21 +1,14 @@
-- name: Obtener la fecha y hora actual
-  shell: date +"%y%m%d-%H:%M:%S"
-  register: current_time
-
-- name: Crear directorio de copia de seguridad
-  file:
-    path: "/etc/pam.d_bakup_{{ current_time.stdout }}"
-    state: directory
-
 - name: Realizar copia de seguridad de los archivos de /etc/pam.d
-  copy:
+  ansible.builtin.copy:
     src: "/etc/pam.d/"
-    dest: "/etc/pam.d_bakup_{{ current_time.stdout }}/"
+    dest: "/etc/pam.d_bakup/"
+    mode: preserve
+    backup: true
     remote_src: true
 
 - name: Configurar pam_faillock.so
   community.general.pamd:
-    name: "{{item}}"
+    name: "{{ item }}"
     type: auth
     control: required
     module_path: pam_deny.so
@@ -27,7 +20,6 @@
   loop:
     - password-auth
     - system-auth
-  register: loopresult
 
 - name: Configurar pam_faillock.so para authfail
   community.general.pamd:
@@ -43,7 +35,6 @@
   loop:
     - password-auth
     - system-auth
-  register: loopresult
 
 - name: Configurar pam_faillock.so para account
   community.general.pamd:
@@ -58,7 +49,6 @@
   loop:
     - password-auth
     - system-auth
-  register: loopresult
 
 - name: Configurar pam_pwhistory.so
   community.general.pamd:
@@ -74,7 +64,6 @@
   loop:
     - password-auth
     - system-auth
-  register: loopresult
 
 - name: Configurar pam_pwquality.so
   community.general.pamd:
@@ -86,4 +75,3 @@
   loop:
     - password-auth
     - system-auth
-  register: loopresult
