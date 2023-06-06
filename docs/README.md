@@ -1,8 +1,8 @@
-# ansible-rol-CCN-STIC-619B
+# Documentación del proyecto ansible-rol-CCN-STIC-619B
 
 En principio, se espera que este directorio albergue documentación relativa al proyecto.
 
-## Documentos del proyecto
+## Documentos específicos del proyecto
 
 Por ahora, esta sección está vacía. Intentaremos vencer la pereza.
 
