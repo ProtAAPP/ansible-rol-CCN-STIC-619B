@@ -6,7 +6,7 @@ En principio, se espera que este directorio albergue documentación relativa al 
 
 Por ahora, esta sección está vacía. Intentaremos vencer la pereza.
 
-## Bibliografía
+## Bibliografía
 
 En esta sección, se enlazan proyectos o documentos que puedan ser interesantes, sea como inspiración o como fuente de ejemplos. A medida que crezca el contenido, se podrá generar esta sección como un documento independiente.
 
