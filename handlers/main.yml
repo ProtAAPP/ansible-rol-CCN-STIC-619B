@@ -2,4 +2,9 @@
 - name: Reiniciar_audit
   ansible.builtin.include_tasks: reglas_audit.yml
 - name: Reiniciar_host
-  ansible.builtin.include_tasks: parametros_del_kernel.yml
+  become: true
+  ansible.builtin.reboot:
+    msg: "Reinicio lanzado por Ansible para aplicar políticas del ENS"
+    pre_reboot_delay: 60
+    post_reboot_delay: 60
+    # test_command: "whoami"

@@ -1,17 +1,14 @@
-- name: Crear directorio para guardar archivos originales
-  become: true
-  ansible.builtin.file:
-    path: /etc/sysctl.d_backup
-    state: directory
-    mode: 0755
-
 - name: Hacer backup de los ficheros de configuración originales
   become: true
   ansible.builtin.copy:
     remote_src: true
-    src: /etc/sysctl.d
-    dest: /etc/sysctl.d_backup
+    src: "{{ item }}"
+    dest: /etc/sysctl.d_backup/
     mode: preserve
+    backup: true
+    local_follow: false
+  with_fileglob:
+    - /etc/sysctl.d/*
 
 - name: Configuración de /etc/sysctl.conf
   become: true
