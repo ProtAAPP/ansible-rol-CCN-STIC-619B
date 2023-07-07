@@ -1,8 +1,0 @@
----
-- name: Reiniciar_host
-  become: true
-  ansible.builtin.reboot:
-    msg: "Reinicio lanzado por Ansible para aplicar políticas del ENS"
-    pre_reboot_delay: 60
-    post_reboot_delay: 60
-    # test_command: "whoami"

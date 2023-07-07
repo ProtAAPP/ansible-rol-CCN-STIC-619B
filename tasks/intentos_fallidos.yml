@@ -1,0 +1,119 @@
+- name: Configurar pam_faillock.so
+  become: true
+  community.general.pamd:
+    backup: true
+    name: "{{ item }}"
+    type: auth
+    control: required
+    module_path: pam_deny.so
+    state: after
+    new_type: auth
+    new_control: required
+    new_module_path: pam_faillock.so
+    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
+
+- name: Actualización pam_faillock.so
+  become: true
+  community.general.pamd:
+    backup: true
+    name: '{{ item }}'
+    type: auth
+    control: required
+    module_path: pam_faillock.so
+    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
+
+- name: Configurar pam_faillock.so para authfail
+  become: true
+  community.general.pamd:
+    backup: true
+    name: "{{ item }}"
+    type: auth
+    control: required
+    module_path: pam_faillock.so
+    state: after
+    new_type: auth
+    new_control: "[default=die]"
+    new_module_path: pam_faillock.so
+    module_arguments: "authfail deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
+
+- name: Actualización pam_faillock.so para authfail
+  become: true
+  community.general.pamd:
+    backup: true
+    name: '{{ item }}'
+    type: auth
+    control: "[default=die]"
+    module_path: pam_faillock.so
+    module_arguments: "authfail deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
+
+- name: Configurar pam_faillock.so para account
+  become: true
+  community.general.pamd:
+    backup: true
+    name: "{{ item }}"
+    type: account
+    control: required
+    module_path: pam_unix.so
+    state: after
+    new_type: account
+    new_control: required
+    new_module_path: pam_faillock.so
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
+
+- name: Configurar pam_pwhistory.so
+  become: true
+  community.general.pamd:
+    backup: true
+    name: "{{ item }}"
+    type: password
+    control: required
+    module_path: pam_deny.so
+    state: after
+    new_type: password
+    new_control: requisite
+    new_module_path: pam_pwhistory.so
+    module_arguments: "debug use_authtok remember=25 retry=8"
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
+
+- name: Configurar pam_pwquality.so
+  become: true
+  community.general.pamd:
+    backup: true
+    name: "{{ item }}"
+    type: password
+    control: requisite
+    module_path: pam_pwquality.so
+    module_arguments: "try_first_pass local_users_only retry=3 authtok_type="
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
