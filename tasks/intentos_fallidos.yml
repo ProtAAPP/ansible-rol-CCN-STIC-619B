@@ -1,18 +1,7 @@
-- name: Realizar copia de seguridad de los archivos de /etc/pam.d
-  become: true
-  ansible.builtin.copy:
-    remote_src: true
-    src: "{{ item }}"
-    dest: "/etc/pam.d_backup/"
-    mode: preserve
-    backup: true
-    local_follow: false
-  with_fileglob:
-    - /etc/pam.d/*
-
 - name: Configurar pam_faillock.so
   become: true
   community.general.pamd:
+    backup: true
     name: "{{ item }}"
     type: auth
     control: required
@@ -21,15 +10,33 @@
     new_type: auth
     new_control: required
     new_module_path: pam_faillock.so
-    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time=0"
+    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
   loop:
     - password-auth
     - system-auth
+  notify:
+    - Reiniciar_host
+
+- name: Actualización pam_faillock.so
+  become: true
+  community.general.pamd:
+    backup: true
+    name: '{{ item }}'
+    type: auth
+    control: required
+    module_path: pam_faillock.so
+    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
 
 - name: Configurar pam_faillock.so para authfail
   become: true
   community.general.pamd:
-    name: password-auth
+    backup: true
+    name: "{{ item }}"
     type: auth
     control: required
     module_path: pam_faillock.so
@@ -37,15 +44,33 @@
     new_type: auth
     new_control: "[default=die]"
     new_module_path: pam_faillock.so
-    module_arguments: "authfail deny=8 even_deny_root unlock_time=0"
+    module_arguments: "authfail deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
   loop:
     - password-auth
     - system-auth
+  notify:
+    - Reiniciar_host
+
+- name: Actualización pam_faillock.so para authfail
+  become: true
+  community.general.pamd:
+    backup: true
+    name: '{{ item }}'
+    type: auth
+    control: "[default=die]"
+    module_path: pam_faillock.so
+    module_arguments: "authfail deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+  loop:
+    - password-auth
+    - system-auth
+  notify:
+    - Reiniciar_host
 
 - name: Configurar pam_faillock.so para account
   become: true
   community.general.pamd:
-    name: password-auth
+    backup: true
+    name: "{{ item }}"
     type: account
     control: required
     module_path: pam_unix.so
@@ -56,11 +81,14 @@
   loop:
     - password-auth
     - system-auth
+  notify:
+    - Reiniciar_host
 
 - name: Configurar pam_pwhistory.so
   become: true
   community.general.pamd:
-    name: password-auth
+    backup: true
+    name: "{{ item }}"
     type: password
     control: required
     module_path: pam_deny.so
@@ -72,11 +100,14 @@
   loop:
     - password-auth
     - system-auth
+  notify:
+    - Reiniciar_host
 
 - name: Configurar pam_pwquality.so
   become: true
   community.general.pamd:
-    name: password-auth
+    backup: true
+    name: "{{ item }}"
     type: password
     control: requisite
     module_path: pam_pwquality.so
@@ -84,3 +115,5 @@
   loop:
     - password-auth
     - system-auth
+  notify:
+    - Reiniciar_host
