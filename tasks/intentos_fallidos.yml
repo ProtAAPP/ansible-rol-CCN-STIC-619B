@@ -1,12 +1,17 @@
 - name: Realizar copia de seguridad de los archivos de /etc/pam.d
+  become: true
   ansible.builtin.copy:
-    src: "/etc/pam.d/"
-    dest: "/etc/pam.d_bakup/"
+    remote_src: true
+    src: "{{ item }}"
+    dest: "/etc/pam.d_backup/"
     mode: preserve
     backup: true
-    remote_src: true
+    local_follow: false
+  with_fileglob:
+    - /etc/pam.d/*
 
 - name: Configurar pam_faillock.so
+  become: true
   community.general.pamd:
     name: "{{ item }}"
     type: auth
@@ -22,6 +27,7 @@
     - system-auth
 
 - name: Configurar pam_faillock.so para authfail
+  become: true
   community.general.pamd:
     name: password-auth
     type: auth
@@ -37,6 +43,7 @@
     - system-auth
 
 - name: Configurar pam_faillock.so para account
+  become: true
   community.general.pamd:
     name: password-auth
     type: account
@@ -51,6 +58,7 @@
     - system-auth
 
 - name: Configurar pam_pwhistory.so
+  become: true
   community.general.pamd:
     name: password-auth
     type: password
@@ -66,6 +74,7 @@
     - system-auth
 
 - name: Configurar pam_pwquality.so
+  become: true
   community.general.pamd:
     name: password-auth
     type: password
