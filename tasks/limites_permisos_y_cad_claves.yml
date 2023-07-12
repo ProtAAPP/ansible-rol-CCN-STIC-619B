@@ -1,17 +1,17 @@
-- name: Realizar copia de seguridad de los archivos de /etc/security/limits.conf
+# COMENTARIO: Se realiza el backup del fichero /etc/security/limits.conf mediante una tarea debido a que el backup del módulo pam_limits no funciona correctamente
+- name: Hacer backup del fichero /etc/security/limits.conf
+  become: true
   ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "{{ item }}_bakup"
+    remote_src: true
+    src: /etc/security/limits.conf
+    dest: /etc/security/limits.conf_bakup
     mode: preserve
     backup: true
-    remote_src: true
-  loop:
-    - /etc/security/limits.conf
-    - /etc/login.defs
-    - /etc/security/pwquality.conf
 
 - name: Establecer el valor de core
+  become: true
   community.general.pam_limits:
+    # backup: true # COMENTARIO: El backup de este módulo realiza backups incluso cuando no hay cambios en el fichero.
     domain: "*"
     limit_type: "{{ item }}"
     limit_item: core
@@ -19,53 +19,70 @@
   loop:
     - soft
     - hard
+  notify:
+    - Reiniciar_host
 
 - name: Duración, longitud y cifrado de la clave
+  become: true
   ansible.builtin.lineinfile:
     dest: "/etc/login.defs"
     regexp: "{{ item.search }}"
     line: "{{ item.replace }}"
     state: present
+    backup: true
   with_items:
-    - { search: "PASS_MAX_DAYS", replace: PASS_MAX_DAYS 60 }
+    - { search: "PASS_MAX_DAYS", replace: "PASS_MAX_DAYS {{ PASS_MAX_DAYS }}" }
     - { search: "PASS_MIN_DAYS", replace: PASS_MIN_DAYS 2 }
     - { search: "PASS_WARN_AGE", replace: PASS_WARN_AGE 10 }
-    - { search: "PASS_MIN_LEN", replace: PASS_MIN_LEN 10 }
+    - { search: "PASS_MIN_LEN", replace: "PASS_MIN_LEN {{ PASS_MIN_LEN }}" }
     - { search: "ENCRYPT_METHOD", replace: ENCRYPT_METHOD SHA512 }
+  notify:
+    - Reiniciar_host
 
 - name: Complejidad de la clave
+  become: true
   ansible.builtin.lineinfile:
     dest: "/etc/security/pwquality.conf"
     regexp: "{{ item.search }}"
     line: "{{ item.replace }}"
     state: present
+    backup: true
   with_items:
-    - { search: "minlen", replace: minlen 10 }
+    - { search: "minlen", replace: "minlen {{ PASS_MIN_LEN }}" }
     - { search: "dcredit", replace: dcredit -1 }
     - { search: "ucredit", replace: ucredit -1 }
     - { search: "lcredit", replace: lcredit -1 }
+  notify:
+    - Reiniciar_host
 
-- name: Obtener lista de usuarios normales (UID > 1000)
+- name: Obtener lista de usuarios con UID > 1000
   ansible.builtin.command: awk -F{{ ':' }} '$1 != "nobody" && $3 >= 1000 {print $1}' /etc/passwd
   register: users_list
   changed_when: false
 
-- name: Modificar caducidad clave para usuarios existentes y forzar el cambio
-  ansible.builtin.command: /usr/bin/chage -m 2 -M 60 -W 10 -d 0 "{{ item }}"
+- name: Modificar la caducidad de la clave y forzar su cambio para los usuarios con parámetros de caducidad de la clave incorrectos
+  become: true
+  ansible.builtin.shell: |
+    grep "{{ item }}:[^:]*:[0-9]*:2:{{ PASS_MAX_DAYS }}:10:" /etc/shadow > /dev/null 2>%1
+    if [ $? -eq 1 ]
+    then
+      /usr/bin/chage -m 2 -M {{ PASS_MAX_DAYS }} -W 10 -d 0 "{{ item }}"
+      echo $?
+    fi
   loop: "{{ users_list.stdout_lines }}"
-  loop_control:
-    loop_var: item
-  when: users_list is succeeded
-  register: chage_result
-  changed_when: true
+  register: users_2_modify_pass_change_params
+  changed_when: users_2_modify_pass_change_params.stdout == "0"
 
-- name: Cambiar permisos de los directorios home de los usuarios existentes
-  ansible.builtin.file:
-    path: "/home/{{ username }}"
-    state: directory
-    group: "{{ username }}"
-    mode: "g-w,o-rwx"
+- name: Obtener los directorios home de los usuarios con UID > 1000
+  ansible.builtin.command: "awk -F: -v user={{ item }} '$1==user {print $6}' /etc/passwd"
   loop: "{{ users_list.stdout_lines }}"
-  loop_control:
-    loop_var: username
-  when: users_list is succeeded
+  register: users_home_list
+  changed_when: false
+
+- name: Configurar los permisos de los directorios home de los usuarios con UID > 1000
+  become: true
+  ansible.builtin.file:
+    path: "{{ item.stdout }}"
+    state: directory
+    mode: "g-w,o-rwx"
+  with_items: "{{ users_home_list.results }}"
