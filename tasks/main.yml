@@ -11,11 +11,11 @@
     - name: CCN-STIC-619B-ENS_Paso3_desinstalar_usuarios_innecesarios
       ansible.builtin.include_tasks: usuarios_innecesarios.yml
 
-#    - name: CCN-STIC-619B-ENS_Paso4_limites_permisos_y_cad_contraseñas_B
-#      vars:
-#        - PASS_MAX_DAYS: 90
-#        - PASS_MIN_LEN: 8
-#      ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
+    - name: CCN-STIC-619B-ENS_Paso4_limites_permisos_y_cad_contraseñas_B
+      vars:
+        - PASS_MAX_DAYS: 90
+        - PASS_MIN_LEN: 8
+      ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
     # TODO: Terminar el Paso5
     - name: CCN-STIC-619B-ENS_Paso5_parametros_gnome
@@ -43,11 +43,11 @@
         - UNLOCK_TIME: 3600
       ansible.builtin.include_tasks: intentos_fallidos.yml
 
-#    - name: CCN-STIC-619B-ENS_Paso6_limites_permisos_y_cad_contraseñas_M
-#      vars:
-#        - PASS_MAX_DAYS: 60
-#        - PASS_MIN_LEN: 10
-#      ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
+    - name: CCN-STIC-619B-ENS_Paso6_limites_permisos_y_cad_contraseñas_M
+      vars:
+        - PASS_MAX_DAYS: 60
+        - PASS_MIN_LEN: 10
+      ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
     # TODO: Terminar el Paso7
     - name: CCN-STIC-619B-ENS_Paso7_parametros_gnome
@@ -78,11 +78,11 @@
         - UNLOCK_TIME: 0
       ansible.builtin.include_tasks: intentos_fallidos.yml
 
-#    - name: CCN-STIC-619B-ENS_Paso7_limites_permisos_y_cad_contraseñas_A
-#      vars:
-#        - PASS_MAX_DAYS: 45
-#        - PASS_MIN_LEN: 12
-#      ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
+    - name: CCN-STIC-619B-ENS_Paso7_limites_permisos_y_cad_contraseñas_A
+      vars:
+        - PASS_MAX_DAYS: 45
+        - PASS_MIN_LEN: 12
+      ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
     # TODO: Terminar el Paso8
     - name: CCN-STIC-619B-ENS_Paso8_parametros_gnome
