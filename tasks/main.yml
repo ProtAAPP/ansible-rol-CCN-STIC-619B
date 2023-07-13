@@ -17,10 +17,11 @@
         - PASS_MIN_LEN: 8
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
-    # TODO: Terminar el Paso5
     - name: CCN-STIC-619B-ENS_Paso5_parametros_gnome
-      ansible.builtin.debug:
-        msg: "Este paso aún no ha sido implementado"
+      vars:
+        - IDLE_DELAY: 1800
+        - LOCK_DELAY: 1
+      ansible.builtin.include_tasks: parametros_gnome.yml
 
 - name: Sistemas con categoría ENS media
   tags:
@@ -49,10 +50,11 @@
         - PASS_MIN_LEN: 10
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
-    # TODO: Terminar el Paso7
     - name: CCN-STIC-619B-ENS_Paso7_parametros_gnome
-      ansible.builtin.debug:
-        msg: "Este paso aún no ha sido implementado"
+      vars:
+        - IDLE_DELAY: 600
+        - LOCK_DELAY: 0
+      ansible.builtin.include_tasks: parametros_gnome_categoria_media_y_alta.yml
 
 - name: Sistemas con categoría ENS alta
   tags:
@@ -84,7 +86,8 @@
         - PASS_MIN_LEN: 12
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
-    # TODO: Terminar el Paso8
     - name: CCN-STIC-619B-ENS_Paso8_parametros_gnome
-      ansible.builtin.debug:
-        msg: "Este paso aún no ha sido implementado"
+      vars:
+        - IDLE_DELAY: 600
+        - LOCK_DELAY: 0
+      ansible.builtin.include_tasks: parametros_gnome_categoria_media_y_alta.yml
