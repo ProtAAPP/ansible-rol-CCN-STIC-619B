@@ -1,0 +1,67 @@
+- name: Crear los directorios /etc/dconf/db/gdm.d , /etc/dconf/db/local.d/ y /etc/dconf/db/local.d/locks/
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  loop:
+    - /etc/dconf/db/gdm.d
+    - /etc/dconf/db/local.d
+    - /etc/dconf/db/local.d/locks
+
+- name: Configurando las BBDD de escritura de cambios de usuario y global
+  become: true
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+    backup: true
+  loop:
+    - src: user.j2
+      dest: /etc/dconf/profile/user
+    - src: gdm.j2
+      dest: /etc/dconf/profile/gdm
+  notify: Aplicar_cambios_parametros_gnome
+
+- name: Crear banner
+  become: true
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+    backup: true
+  loop:
+    - src: 01-banner-message.j2
+      dest: /etc/dconf/db/gdm.d/01-banner-message
+    - src: banner.j2
+      dest: /etc/issue.net
+    - src: banner.j2
+      dest: /etc/issue
+    - src: banner.j2
+      dest: /etc/motd
+  notify: Aplicar_cambios_parametros_gnome
+
+- name: No mostrar lista de usuarios en el login
+  become: true
+  ansible.builtin.template:
+    src: 00-login-screen.j2
+    dest: /etc/dconf/db/gdm.d/00-login-screen
+    mode: 0644
+    backup: true
+  notify: Aplicar_cambios_parametros_gnome
+
+- name: Limitar el tiempo de inactividad de la pantalla
+  become: true
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+    backup: true
+  loop:
+    - src: 00-screensaver.j2
+      dest: /etc/dconf/db/local.d/00-screensaver
+    - src: screensaver.j2
+      dest: /etc/dconf/db/local.d/locks/screensaver
+    - src: 03-privacy.j2
+      dest: /etc/dconf/db/local.d/03-privacy
+  notify: Aplicar_cambios_parametros_gnome

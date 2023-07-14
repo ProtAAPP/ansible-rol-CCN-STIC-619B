@@ -1,0 +1,14 @@
+# Specify the dconf path
+[org/gnome/desktop/session]
+
+# Number of seconds of inactivity before the screen goes blank
+idle-delay=uint32 {{ IDLE_DELAY }}
+
+# Specify the dconf path
+[org/gnome/desktop/screensaver]
+
+# Lock the screen after the screen is blank
+lock-enabled=true
+
+# Number of seconds after the screen is blank before locking the screen
+lock-delay=uint32 {{ LOCK_DELAY }}
