@@ -1,0 +1,42 @@
+- name: Incluyendo tareas de configuración de gnome para sistemas de categoría básica
+  ansible.builtin.include_tasks: parametros_gnome.yml
+
+- name: Configurar tiempo de inactividad (power) para equipos portátiles
+  tags:
+    - portatiles
+  become: true
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+    backup: true
+  loop:
+    - src: 05-power.j2
+      dest: /etc/dconf/db/local.d/05-power
+    - src: power.j2
+      dest: /etc/dconf/db/local.d/locks/power
+  notify: Aplicar_cambios_parametros_gnome
+  when:
+    - '"portatiles" in ansible_run_tags'
+
+### COMENTARIO: Las acciones de esta tarea aparecen comentadas en el script de la guía
+# - name: Configuración /etc/dconf/db/local.d/06-debug
+#   become: true
+#   ansible.builtin.template:
+#     src: 06-debug.j2
+#     dest: /etc/dconf/db/local.d/06-debug
+#     mode: 0644
+#     backup: true
+#   notify: Aplicar_cambios_parametros_gnome
+
+- name: Fijar timeout de inactividad para las sesiones de usuario (15 minutos) # En el script pone 15 minutos en el comentario pero lo fija a 10 minutos.
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/profile.local
+    line: "{{ item }}"
+    create: true
+    mode: 0644
+  with_items:
+    - TMOUT=600
+    - export TMOUT
+  notify: Aplicar_cambios_parametros_gnome
