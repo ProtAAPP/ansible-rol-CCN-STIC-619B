@@ -8,6 +8,12 @@
     mode: preserve
     backup: true
 
+- name: Borrar las líneas comentadas de /etc/security/limits.conf para que Clara no diga que los parámetos de volcados del núcleo están mal configurados
+  ansible.builtin.lineinfile:
+    dest: /etc/security/limits.conf
+    state: absent
+    regexp: '^\s*#(?!<domain>\s+<type>\s+<item>\s{2}<value>).*$'
+
 - name: Establecer el valor de core
   become: true
   community.general.pam_limits:
@@ -62,6 +68,7 @@
 
 - name: Modificar la caducidad de la clave y forzar su cambio para los usuarios con parámetros de caducidad de la clave incorrectos
   become: true
+  # COMENTARIO: Si se caduca la contraseña del usuario que ejecuta el comando chage, deja de tener permisos para seguir ejecutando el playbook
   ansible.builtin.shell: |
     grep "{{ item }}:[^:]*:[0-9]*:2:{{ PASS_MAX_DAYS }}:10:" /etc/shadow > /dev/null 2>%1
     if [ $? -eq 1 ]
