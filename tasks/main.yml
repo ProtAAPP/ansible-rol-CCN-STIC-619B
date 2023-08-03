@@ -2,6 +2,9 @@
   tags:
     - ens_basica
   block:
+    - name: Configuración del sistema de ficheros y permisos
+      ansible.builtin.include_tasks: configuracion_sistema_de_ficheros_y_permisos.yml
+
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
@@ -27,6 +30,9 @@
   tags:
     - ens_media
   block:
+    - name: Configuración del sistema de ficheros y permisos
+      ansible.builtin.include_tasks: configuracion_sistema_de_ficheros_y_permisos.yml
+
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
@@ -60,6 +66,9 @@
   tags:
     - ens_alta
   block:
+    - name: Configuración del sistema de ficheros y permisos
+      ansible.builtin.include_tasks: configuracion_sistema_de_ficheros_y_permisos.yml
+
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
