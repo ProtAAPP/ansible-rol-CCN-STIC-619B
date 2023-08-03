@@ -34,7 +34,7 @@
   block:
     - name: Montar /boot para modificar la configuración de grub
       become: true
-      ansible.builtin.command: mountpoint -q /boot || mount /boot -o rw
+      ansible.builtin.shell: mountpoint -q /boot || mount /boot -o rw
       changed_when: false
     - name: Reconfigurar grub
       ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
