@@ -9,6 +9,7 @@
     backup: true
 
 - name: Borrar las líneas comentadas de /etc/security/limits.conf para que Clara no diga que los parámetos de volcados del núcleo están mal configurados
+  become: true
   ansible.builtin.lineinfile:
     dest: /etc/security/limits.conf
     state: absent
@@ -38,10 +39,11 @@
     backup: true
   with_items:
     - { search: "PASS_MAX_DAYS", replace: "PASS_MAX_DAYS {{ PASS_MAX_DAYS }}" }
-    - { search: "PASS_MIN_DAYS", replace: PASS_MIN_DAYS 2 }
-    - { search: "PASS_WARN_AGE", replace: PASS_WARN_AGE 10 }
+    - { search: "PASS_MIN_DAYS", replace: "PASS_MIN_DAYS 2" }
+    - { search: "PASS_WARN_AGE", replace: "PASS_WARN_AGE 10" }
     - { search: "PASS_MIN_LEN", replace: "PASS_MIN_LEN {{ PASS_MIN_LEN }}" }
-    - { search: "ENCRYPT_METHOD", replace: ENCRYPT_METHOD SHA512 }
+    - { search: "ENCRYPT_METHOD", replace: "ENCRYPT_METHOD SHA512" }
+    - { search: "^UMASK.*", replace: "UMASK 027" }
   notify:
     - Reiniciar_host
 
@@ -54,10 +56,11 @@
     state: present
     backup: true
   with_items:
-    - { search: "minlen", replace: "minlen {{ PASS_MIN_LEN }}" }
-    - { search: "dcredit", replace: dcredit -1 }
-    - { search: "ucredit", replace: ucredit -1 }
-    - { search: "lcredit", replace: lcredit -1 }
+    - { search: "minlen", replace: "minlen = {{ PASS_MIN_LEN }}" }
+    - { search: "dcredit", replace: "dcredit = -1" }
+    - { search: "ucredit", replace: "ucredit = -1" }
+    - { search: "lcredit", replace: "lcredit = -1" }
+    - { search: "ocredit", replace: "ocredit = -1" }
   notify:
     - Reiniciar_host
 
@@ -91,5 +94,5 @@
   ansible.builtin.file:
     path: "{{ item.stdout }}"
     state: directory
-    mode: "g-w,o-rwx"
+    mode: "g-rwx,o-rwx"
   with_items: "{{ users_home_list.results }}"
