@@ -42,7 +42,7 @@
     - { search: "PASS_MIN_DAYS", replace: "PASS_MIN_DAYS 2" }
     - { search: "PASS_WARN_AGE", replace: "PASS_WARN_AGE 10" }
     - { search: "PASS_MIN_LEN", replace: "PASS_MIN_LEN {{ PASS_MIN_LEN }}" }
-    - { search: "ENCRYPT_METHOD", replace: "ENCRYPT_METHOD SHA512" }
+    - { search: "ENCRYPT_METHOD", replace: "ENCRYPT_METHOD  SHA512" }
     - { search: "^UMASK.*", replace: "UMASK 027" }
   notify:
     - Reiniciar_host
