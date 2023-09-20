@@ -1,0 +1,4 @@
+- name: Mostrar_sysctl.conf
+  ansible.builtin.debug:
+    var: item
+  with_file: /etc/sysctl.conf 

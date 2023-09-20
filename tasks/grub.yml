@@ -34,7 +34,7 @@
   block:
     - name: Montar /boot para modificar la configuración de grub
       become: true
-      ansible.builtin.shell: mountpoint -q /boot || mount /boot -o rw
+      ansible.builtin.shell: ( mountpoint -q /boot && mount /boot -o remount,rw ) || mount /boot -o rw
       changed_when: false
     - name: Reconfigurar grub
       ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
@@ -54,6 +54,10 @@
   become: true
   when: uefi.stat.exists
   block:
+    - name: Montar /boot/efi para modificar la configuración de grub
+      become: true
+      ansible.builtin.shell: ( mountpoint -q /boot/efi && mount /boot/efi -o remount,rw ) || mount /boot/efi -o rw
+      changed_when: false
     - name: Reconfigurar grub con UEFI
       ansible.builtin.command: grub2-mkconfig -o /boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg
       when: hash_grub_root_pass.changed
@@ -61,3 +65,9 @@
       ansible.builtin.file:
         path: "/boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg"
         mode: 0600
+    - name: Desmontar /boot/efi al terminar de configurar grub
+      become: true
+      ansible.posix.mount:
+        path: /boot/efi
+        state: unmounted
+      changed_when: false

@@ -19,15 +19,5 @@
     mode: 0644
   register: parametros_kernel_modificados
   notify:
+    - Mostrar_configuracion_parametros_kernel
     - Reiniciar_host
-
-- name: Mostrar /etc/sysctl.conf
-  when: parametros_kernel_modificados.changed
-  block:
-    - name: Obtener contenido de /etc/sysctl.conf
-      ansible.builtin.command: cat /etc/sysctl.conf
-      register: contenido_fichero_sysctl
-      changed_when: contenido_fichero_sysctl.rc == 0
-    - name: Sacar por pantalla el contenido de /etc/sysctl.conf
-      ansible.builtin.debug:
-        var: contenido_fichero_sysctl.stdout_lines

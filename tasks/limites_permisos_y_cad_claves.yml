@@ -71,12 +71,11 @@
 
 - name: Modificar la caducidad de la clave y forzar su cambio para los usuarios con parámetros de caducidad de la clave incorrectos
   become: true
-  # COMENTARIO: Si se caduca la contraseña del usuario que ejecuta el comando chage, deja de tener permisos para seguir ejecutando el playbook
   ansible.builtin.shell: |
     grep "{{ item }}:[^:]*:[0-9]*:2:{{ PASS_MAX_DAYS }}:10:" /etc/shadow > /dev/null 2>%1
     if [ $? -eq 1 ]
     then
-      /usr/bin/chage -m 2 -M {{ PASS_MAX_DAYS }} -W 10 -d 0 "{{ item }}"
+      /usr/bin/chage -m 2 -M {{ PASS_MAX_DAYS }} -W 10 -d $(( $(date +%s) / 86400 - {{ PASS_MAX_DAYS }} )) "{{ item }}"
       echo $?
     fi
   loop: "{{ users_list.stdout_lines }}"
