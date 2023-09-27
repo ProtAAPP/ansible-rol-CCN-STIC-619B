@@ -1,4 +1,7 @@
-- name: Mostrar_sysctl.conf
+- name: Obtener_contenido_fichero_sysctl.conf
+  ansible.builtin.command: cat /etc/sysctl.conf
+  register: contenido_fichero_sysctl_conf
+  changed_when: false
+- name: Ver_contenido_fichero_sysctl.conf
   ansible.builtin.debug:
-    var: item
-  with_file: /etc/sysctl.conf 
+    var: contenido_fichero_sysctl_conf.stdout_lines

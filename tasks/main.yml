@@ -8,6 +8,9 @@
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
+    - name: Búsqueda de cuentas sin contraseña
+      ansible.builtin.include_tasks: usuarios_sin_contrasena.yml
+
     - name: CCN-STIC-619B-ENS_Paso2_paquetes_huerfanos
       ansible.builtin.include_tasks: paquetes_huerfanos.yml
 
@@ -35,6 +38,9 @@
 
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
+
+    - name: Búsqueda de cuentas sin contraseña
+      ansible.builtin.include_tasks: usuarios_sin_contrasena.yml
 
     - name: CCN-STIC-619B-ENS_Paso2_paquetes_huerfanos
       ansible.builtin.include_tasks: paquetes_huerfanos.yml
@@ -71,6 +77,9 @@
 
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
+
+    - name: Búsqueda de cuentas sin contraseña
+      ansible.builtin.include_tasks: usuarios_sin_contrasena.yml
 
     - name: CCN-STIC-619B-ENS_Paso2_parametros_del_kernel
       ansible.builtin.include_tasks: parametros_del_kernel.yml

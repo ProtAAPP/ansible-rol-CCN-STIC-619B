@@ -1,15 +1,11 @@
 ---
+- name: Usuarios_sin_contrasena
+  ansible.builtin.import_tasks: 
+    file: usuarios_sin_contrasena.yml
+
 - name: Reiniciar_audit
   ansible.builtin.include_tasks: 
     file: reglas_audit.yml
-
-- name: Reiniciar_host
-  become: true
-  ansible.builtin.reboot:
-    msg: "Reinicio lanzado por Ansible para aplicar políticas del ENS"
-    pre_reboot_delay: 60
-    post_reboot_delay: 60
-    # test_command: "whoami"
 
 - name: Aplicar_cambios_parametros_gnome
   ansible.builtin.include_tasks: 
@@ -18,3 +14,11 @@
 - name: Mostrar_configuracion_parametros_kernel
   ansible.builtin.include_tasks:
     file: parametros_del_kernel.yml
+
+- name: Reiniciar_host
+  become: true
+  ansible.builtin.reboot:
+    msg: "Reinicio lanzado por Ansible para aplicar políticas del ENS"
+    pre_reboot_delay: 60
+    post_reboot_delay: 60
+    # test_command: "whoami"
