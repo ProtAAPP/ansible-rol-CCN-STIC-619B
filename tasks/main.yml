@@ -2,14 +2,22 @@
   tags:
     - ens_basica
   block:
-    - name: Configuración del sistema de ficheros y permisos
-      ansible.builtin.include_tasks: configuracion_sistema_de_ficheros_y_permisos.yml
-
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
+    - name: Contraseña segura de root
+      vars:
+        - PASS_MAX_DAYS: 90
+      ansible.builtin.include_tasks: contrasena_de_root.yml
+  
     - name: Búsqueda de cuentas sin contraseña
       ansible.builtin.include_tasks: usuarios_sin_contrasena.yml
+    
+    - name: Usuarios con UID 0 que no sean root
+      ansible.builtin.include_tasks: usuarios_uid_0_no_root.yml
+
+    - name: Limitación de servicios y demonios
+      ansible.builtin.include_tasks: limitacion_de_servicios_y_demonios.yml
 
     - name: CCN-STIC-619B-ENS_Paso2_paquetes_huerfanos
       ansible.builtin.include_tasks: paquetes_huerfanos.yml
@@ -29,18 +37,32 @@
         - LOCK_DELAY: 1
       ansible.builtin.include_tasks: parametros_gnome.yml
 
+    - name: Aplicación de actualizaciones
+      ansible.builtin.include_tasks: aplicacion_de_actualizaciones.yml
+
+    - name: Configuración del sistema de ficheros y permisos
+      ansible.builtin.include_tasks: configuracion_del_sistema_de_ficheros_y_permisos.yml
+
 - name: Sistemas con categoría ENS media
   tags:
     - ens_media
   block:
-    - name: Configuración del sistema de ficheros y permisos
-      ansible.builtin.include_tasks: configuracion_sistema_de_ficheros_y_permisos.yml
-
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
+    - name: Contraseña segura de root
+      vars:
+        - PASS_MAX_DAYS: 60
+      ansible.builtin.include_tasks: contrasena_de_root.yml
+
     - name: Búsqueda de cuentas sin contraseña
       ansible.builtin.include_tasks: usuarios_sin_contrasena.yml
+
+    - name: Usuarios con UID 0 que no sean root
+      ansible.builtin.include_tasks: usuarios_uid_0_no_root.yml
+
+    - name: Limitación de servicios y demonios
+      ansible.builtin.include_tasks: limitacion_de_servicios_y_demonios.yml
 
     - name: CCN-STIC-619B-ENS_Paso2_paquetes_huerfanos
       ansible.builtin.include_tasks: paquetes_huerfanos.yml
@@ -68,19 +90,33 @@
         - LOCK_DELAY: 0
       ansible.builtin.include_tasks: parametros_gnome_categoria_media_y_alta.yml
 
+    - name: Aplicación de actualizaciones
+      ansible.builtin.include_tasks: aplicacion_de_actualizaciones.yml
+
+    - name: Configuración del sistema de ficheros y permisos
+      ansible.builtin.include_tasks: configuracion_del_sistema_de_ficheros_y_permisos.yml
+
 - name: Sistemas con categoría ENS alta
   tags:
     - ens_alta
   block:
-    - name: Configuración del sistema de ficheros y permisos
-      ansible.builtin.include_tasks: configuracion_sistema_de_ficheros_y_permisos.yml
-
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
+
+    - name: Contraseña segura de root
+      vars:
+        - PASS_MAX_DAYS: 45
+      ansible.builtin.include_tasks: contrasena_de_root.yml
 
     - name: Búsqueda de cuentas sin contraseña
       ansible.builtin.include_tasks: usuarios_sin_contrasena.yml
 
+    - name: Usuarios con UID 0 que no sean root
+      ansible.builtin.include_tasks: usuarios_uid_0_no_root.yml
+
+    - name: Limitación de servicios y demonios
+      ansible.builtin.include_tasks: limitacion_de_servicios_y_demonios.yml
+      
     - name: CCN-STIC-619B-ENS_Paso2_parametros_del_kernel
       ansible.builtin.include_tasks: parametros_del_kernel.yml
 
@@ -109,3 +145,9 @@
         - IDLE_DELAY: 600
         - LOCK_DELAY: 0
       ansible.builtin.include_tasks: parametros_gnome_categoria_media_y_alta.yml
+
+    - name: Aplicación de actualizaciones
+      ansible.builtin.include_tasks: aplicacion_de_actualizaciones.yml
+
+    - name: Configuración del sistema de ficheros y permisos
+      ansible.builtin.include_tasks: configuracion_del_sistema_de_ficheros_y_permisos.yml

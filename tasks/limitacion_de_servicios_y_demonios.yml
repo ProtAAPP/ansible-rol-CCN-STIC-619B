@@ -1,0 +1,17 @@
+- name: Deshabilitar y enmascarar demonios y procesos innecesarios
+  when: demonios_y_procesos_innecesarios is defined and demonios_y_procesos_innecesarios != None
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    masked: true
+  with_items: "{{ demonios_y_procesos_innecesarios }}"
+  notify: 
+    - Reiniciar_host
+
+- name: Obtener_facts_de_todos_los_servicios 
+  service_facts:
+  register: services_facts
+
+- name: Mostrar_estado_al_arranque_de_demonios_y_procesos
+  ansible.builtin.debug:
+    var: services_facts.ansible_facts.services

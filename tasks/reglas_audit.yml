@@ -16,9 +16,9 @@
     line: "{{ item.line }}"
     backup: true
   loop:
-    - { regexp: '^max_log_file .*', line: 'max_log_file = 10' }
-    - { regexp: '^num_logs.*', line: 'num_logs = 12' }
-    - { regexp: '^max_log_file_action.*', line: 'max_log_file_action = ROTATE' }
+    - { regexp: '^max_log_file .*', line: "max_log_file = {{ max_log_file }}" }
+    - { regexp: '^num_logs.*', line: "num_logs = {{ num_logs }}" }
+    - { regexp: '^max_log_file_action.*', line: "max_log_file_action = {{ max_log_file_action }}" }
   notify:
     - Reiniciar_audit
 - name: Habilitar servicio auditd

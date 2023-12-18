@@ -1,0 +1,35 @@
+- name: Crear password de grub para root
+  become: true
+  ansible.builtin.expect:
+    command: /bin/bash -c "grub2-mkpasswd-pbkdf2 | tee -a hash"
+    responses:
+      (?i)password|contraseña: "{{ grub_root_pass }}"
+  register: hash_grub_root_pass
+
+- name: Anadir_root_y_su_password_a_superusers_en_grub
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/grub.d/40_custom
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - { regexp: '^set superusers=', line: 'set superusers="root"' }
+    - { regexp: '^password_pbkdf2 root', line: 'password_pbkdf2 root {{ (hash_grub_root_pass.stdout_lines | last).split(" ") | last }}' }
+
+- name: Montar /boot o /boot/efi para aplicar las actualizaciones
+  ansible.builtin.include_tasks:
+    file: montar_boot.yml
+
+- name: Reconfigurar grub
+  become: true
+  ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
+  when: not uefi.stat.exists
+
+- name: Reconfigurar grub con UEFI
+  become: true
+  ansible.builtin.command: grub2-mkconfig -o /boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg
+  when: uefi.stat.exists
+
+- name: Desmontar /boot o /boot/efi después de modificar la configuración de grub
+  ansible.builtin.include_tasks:
+    file: desmontar_boot.yml

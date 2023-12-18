@@ -1,0 +1,3 @@
+max_log_file: 10
+num_logs: 12
+max_log_file_action: ROTATE

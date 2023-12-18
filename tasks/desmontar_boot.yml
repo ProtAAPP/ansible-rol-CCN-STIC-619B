@@ -1,0 +1,20 @@
+- name: Comprobar si uefi está instalado
+  ansible.builtin.stat:
+    path: /sys/firmware/efi
+  register: uefi
+
+- name: Desmontar /boot al terminar la actualización de seguridad
+  become: true
+  ansible.posix.mount:
+    path: /boot
+    state: unmounted
+  changed_when: false
+  when: not uefi.stat.exists  
+
+- name: Desmontar /boot/efi al terminar la actualización de seguridad
+  become: true
+  ansible.posix.mount:
+    path: /boot/efi
+    state: unmounted
+  changed_when: false
+  when: uefi.stat.exists
