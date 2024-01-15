@@ -14,7 +14,7 @@ demonios_y_procesos_innecesarios:
 #  - ctrl-alt-del.target
 #  - iprutils.target
 #  - fstrim.timer
-#  - container-getty@.service 
+#  - container-getty@.service
 #  - console-getty.service
 #  - kexec.target
 #  - cpupower.service
