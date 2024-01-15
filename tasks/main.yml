@@ -112,11 +112,11 @@
     - name: Usuarios con UID 0 que no sean root
       ansible.builtin.include_tasks: usuarios_uid_0_no_root.yml
 
-    - name: Limitación de servicios y demonios
-      ansible.builtin.include_tasks: limitacion_de_servicios_y_demonios.yml
-
     - name: CCN-STIC-619B-ENS_Paso2_parametros_del_kernel
       ansible.builtin.include_tasks: parametros_del_kernel.yml
+
+    - name: Limitación de servicios y demonios
+      ansible.builtin.include_tasks: limitacion_de_servicios_y_demonios.yml
 
     - name: CCN-STIC-619B-ENS_Paso3_paquetes_huerfanos
       ansible.builtin.include_tasks: paquetes_huerfanos.yml
