@@ -9,7 +9,7 @@
     security: true
     state: latest
   register: actualizaciones
-  notify: 
+  notify:
     - Mostrar_actualizaciones_aplicadas
     - Reiniciar_host
 

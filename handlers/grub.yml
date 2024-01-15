@@ -21,14 +21,18 @@
     file: montar_boot.yml
 
 - name: Reconfigurar grub
+  when: not uefi.stat.exists
   become: true
   ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
-  when: not uefi.stat.exists
+  register: grub2_mkconfig_output
+  changed_when: grub2_mkconfig_output.rc == 0
 
 - name: Reconfigurar grub con UEFI
+  when: uefi.stat.exists
   become: true
   ansible.builtin.command: grub2-mkconfig -o /boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg
-  when: uefi.stat.exists
+  register: grub2_mkconfig_uefi_utput
+  changed_when: grub2_mkconfig_uefi_output.rc == 0
 
 - name: Desmontar /boot o /boot/efi después de modificar la configuración de grub
   ansible.builtin.include_tasks:

@@ -14,4 +14,3 @@
   ansible.builtin.shell: ( mountpoint -q /boot/efi && mount /boot/efi -o remount,rw ) || mount /boot/efi -o rw
   changed_when: false
   when: uefi.stat.exists
-  

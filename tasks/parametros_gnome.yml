@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: 0755
+    mode: '0755'
   loop:
     - /etc/dconf/db/gdm.d
     - /etc/dconf/db/local.d
@@ -14,7 +14,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0644
+    mode: '0644'
     backup: true
   loop:
     - src: user.j2
@@ -28,7 +28,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0644
+    mode: '0644'
     backup: true
   loop:
     - src: 01-banner-message.j2
@@ -46,7 +46,7 @@
   ansible.builtin.template:
     src: 00-login-screen.j2
     dest: /etc/dconf/db/gdm.d/00-login-screen
-    mode: 0644
+    mode: '0644'
     backup: true
   notify: Aplicar_cambios_parametros_gnome
 
@@ -55,7 +55,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0644
+    mode: '0644'
     backup: true
   loop:
     - src: 00-screensaver.j2

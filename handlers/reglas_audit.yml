@@ -7,6 +7,8 @@
   #  name: auditd
   #  state: restarted
   #  use: service
+  register: reiniciar_servicio_audit_output # <- Registers the command output.
+  changed_when: reiniciar_servicio_audit_output.rc == 0
 - name: Listar_reglas_audit
   block:
     - name: Obtener reglas audit

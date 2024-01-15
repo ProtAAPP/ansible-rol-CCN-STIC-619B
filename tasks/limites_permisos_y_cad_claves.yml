@@ -1,4 +1,4 @@
-# COMENTARIO: Se realiza el backup del fichero /etc/security/limits.conf mediante una tarea debido a que el backup del módulo pam_limits no funciona correctamente
+# COMENTARIO: Se hace el backup del fichero /etc/security/limits.conf mediante una tarea debido a que el backup del módulo pam_limits no funciona correctamente
 - name: Hacer backup del fichero /etc/security/limits.conf
   become: true
   ansible.builtin.copy:
@@ -42,7 +42,7 @@
     - { search: "PASS_MIN_DAYS", replace: "PASS_MIN_DAYS 2" }
     - { search: "PASS_WARN_AGE", replace: "PASS_WARN_AGE 10" }
     - { search: "PASS_MIN_LEN", replace: "PASS_MIN_LEN {{ PASS_MIN_LEN }}" }
-    - { search: "ENCRYPT_METHOD", replace: "ENCRYPT_METHOD  SHA512" }
+    - { search: "^ENCRYPT_METHOD.*", replace: "ENCRYPT_METHOD SHA512" }
     - { search: "^UMASK.*", replace: "UMASK 027" }
   notify:
     - Reiniciar_host

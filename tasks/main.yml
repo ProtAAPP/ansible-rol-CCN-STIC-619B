@@ -1,18 +1,21 @@
 - name: Sistemas con categoría ENS básica
   tags:
     - ens_basica
+  vars:
+    - PASS_MAX_DAYS: 90
+    - PASS_MIN_LEN: 8
+    - IDLE_DELAY: 1800
+    - LOCK_DELAY: 1
   block:
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
     - name: Contraseña segura de root
-      vars:
-        - PASS_MAX_DAYS: 90
       ansible.builtin.include_tasks: contrasena_de_root.yml
-  
+
     - name: Búsqueda de cuentas sin contraseña
       ansible.builtin.include_tasks: usuarios_sin_contrasena.yml
-    
+
     - name: Usuarios con UID 0 que no sean root
       ansible.builtin.include_tasks: usuarios_uid_0_no_root.yml
 
@@ -26,15 +29,9 @@
       ansible.builtin.include_tasks: usuarios_innecesarios.yml
 
     - name: CCN-STIC-619B-ENS_Paso4_limites_permisos_y_cad_contraseñas_B
-      vars:
-        - PASS_MAX_DAYS: 90
-        - PASS_MIN_LEN: 8
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
     - name: CCN-STIC-619B-ENS_Paso5_parametros_gnome
-      vars:
-        - IDLE_DELAY: 1800
-        - LOCK_DELAY: 1
       ansible.builtin.include_tasks: parametros_gnome.yml
 
     - name: Aplicación de actualizaciones
@@ -46,13 +43,17 @@
 - name: Sistemas con categoría ENS media
   tags:
     - ens_media
+  vars:
+    - PASS_MAX_DAYS: 60
+    - UNLOCK_TIME: 3600
+    - PASS_MIN_LEN: 10
+    - IDLE_DELAY: 600
+    - LOCK_DELAY: 0
   block:
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
     - name: Contraseña segura de root
-      vars:
-        - PASS_MAX_DAYS: 60
       ansible.builtin.include_tasks: contrasena_de_root.yml
 
     - name: Búsqueda de cuentas sin contraseña
@@ -74,20 +75,12 @@
       ansible.builtin.include_tasks: usuarios_innecesarios.yml
 
     - name: CCN-STIC-619B-ENS_Paso5_intentos_fallidos_M
-      vars:
-        - UNLOCK_TIME: 3600
       ansible.builtin.include_tasks: intentos_fallidos.yml
 
     - name: CCN-STIC-619B-ENS_Paso6_limites_permisos_y_cad_contraseñas_M
-      vars:
-        - PASS_MAX_DAYS: 60
-        - PASS_MIN_LEN: 10
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
     - name: CCN-STIC-619B-ENS_Paso7_parametros_gnome
-      vars:
-        - IDLE_DELAY: 600
-        - LOCK_DELAY: 0
       ansible.builtin.include_tasks: parametros_gnome_categoria_media_y_alta.yml
 
     - name: Aplicación de actualizaciones
@@ -99,13 +92,18 @@
 - name: Sistemas con categoría ENS alta
   tags:
     - ens_alta
+  vars:
+    - PASS_MAX_DAYS: 45
+    - UNLOCK_TIME: 0
+    - PASS_MAX_DAYS: 45
+    - PASS_MIN_LEN: 12
+    - IDLE_DELAY: 600
+    - LOCK_DELAY: 0
   block:
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
 
     - name: Contraseña segura de root
-      vars:
-        - PASS_MAX_DAYS: 45
       ansible.builtin.include_tasks: contrasena_de_root.yml
 
     - name: Búsqueda de cuentas sin contraseña
@@ -116,7 +114,7 @@
 
     - name: Limitación de servicios y demonios
       ansible.builtin.include_tasks: limitacion_de_servicios_y_demonios.yml
-      
+
     - name: CCN-STIC-619B-ENS_Paso2_parametros_del_kernel
       ansible.builtin.include_tasks: parametros_del_kernel.yml
 
@@ -130,20 +128,12 @@
       ansible.builtin.include_tasks: usuarios_innecesarios.yml
 
     - name: CCN-STIC-619B-ENS_Paso6_intentos_fallidos_A
-      vars:
-        - UNLOCK_TIME: 0
       ansible.builtin.include_tasks: intentos_fallidos.yml
 
     - name: CCN-STIC-619B-ENS_Paso7_limites_permisos_y_cad_contraseñas_A
-      vars:
-        - PASS_MAX_DAYS: 45
-        - PASS_MIN_LEN: 12
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
     - name: CCN-STIC-619B-ENS_Paso8_parametros_gnome
-      vars:
-        - IDLE_DELAY: 600
-        - LOCK_DELAY: 0
       ansible.builtin.include_tasks: parametros_gnome_categoria_media_y_alta.yml
 
     - name: Aplicación de actualizaciones

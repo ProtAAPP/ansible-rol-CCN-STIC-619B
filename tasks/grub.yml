@@ -15,14 +15,14 @@
   become: true
   ansible.builtin.file:
     path: "/boot/grub2/grub.cfg"
-    mode: 0600
+    mode: '0600'
   when: not uefi.stat.exists
 
 - name: Permisos del fichero de configuración de grub con UEFI
   become: true
   ansible.builtin.file:
     path: "/boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg"
-    mode: 0600
+    mode: '0600'
   when: uefi.stat.exists
 
 - name: Desmontar /boot o /boot/efi después de modificar la configuración de grub

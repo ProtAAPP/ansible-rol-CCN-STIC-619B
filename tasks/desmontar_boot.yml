@@ -9,7 +9,7 @@
     path: /boot
     state: unmounted
   changed_when: false
-  when: not uefi.stat.exists  
+  when: not uefi.stat.exists
 
 - name: Desmontar /boot/efi al terminar la actualización de seguridad
   become: true

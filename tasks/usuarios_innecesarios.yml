@@ -4,7 +4,7 @@
     name: "{{ item }}"
     state: absent
   with_items: "{{ usuarios_innecesarios }}"
-  notify: 
+  notify:
     - Reiniciar_host
 
 - name: Eliminación de otros usuarios innecesarios
@@ -15,7 +15,7 @@
     remove: true
   with_items: "{{ otros_usuarios_innecesarios }}"
   when: otros_usuarios_innecesarios is defined
-  notify: 
+  notify:
     - Reiniciar_host
 
 - name: Eliminación de grupos innecesarios
@@ -24,7 +24,7 @@
     name: "{{ item }}"
     state: absent
   with_items: "{{ grupos_innecesarios }}"
-  notify: 
+  notify:
     - Reiniciar_host
 
 - name: Asignando shell a usuarios
@@ -32,7 +32,7 @@
     name: "{{ item.user }}"
     shell: "{{ item.shell }}"
   loop: "{{ shell_usuarios }}"
-  notify: 
+  notify:
     - Reiniciar_host
 
 - name: Obtener lista de usuarios con UID >= 1000
@@ -46,5 +46,5 @@
     name: "{{ item }}"
     shell: "/bin/bash"
   loop: "{{ usuarios_normales.stdout_lines }}"
-  notify: 
+  notify:
     - Reiniciar_host

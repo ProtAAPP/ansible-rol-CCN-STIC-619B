@@ -1,4 +1,4 @@
-# Falla la tarea para notificar el problema 
+# Falla la tarea para notificar el problema
 - name: Mostrar_usuarios_con_uid0
   ansible.builtin.debug:
     var: users_uid0_list.stdout_lines
