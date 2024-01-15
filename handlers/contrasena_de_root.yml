@@ -1,0 +1,19 @@
+---
+- name: Forzar_cambio_de_password_de_root
+  become: true
+  ansible.builtin.user:
+    name: root
+    password: "{{ root_pass | password_hash('sha512') }}"
+  register: root_pass
+  notify: Obtener_parametros_de_password_de_root
+
+- name: Obtener_parametros_de_password_de_root
+  become: true
+  ansible.builtin.command: /usr/bin/chage -l root
+  register: chage_root_output
+  notify: Mostrar_parametros_de_password_de_root
+  changed_when: false
+
+- name: Mostrar_parametros_de_password_de_root
+  ansible.builtin.debug:
+    var: chage_root_output.stdout_lines

@@ -8,7 +8,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0644
+    mode: '0644'
     backup: true
   loop:
     - src: 05-power.j2
@@ -35,7 +35,7 @@
     path: /etc/profile.local
     line: "{{ item }}"
     create: true
-    mode: 0644
+    mode: '0644'
   with_items:
     - TMOUT=600
     - export TMOUT

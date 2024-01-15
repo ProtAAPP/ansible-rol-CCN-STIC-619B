@@ -4,6 +4,9 @@
     name: "{{ item }}"
     state: absent
   with_items: "{{ usuarios_innecesarios }}"
+  notify:
+    - Reiniciar_host
+
 - name: Eliminación de otros usuarios innecesarios
   become: true
   ansible.builtin.user:
@@ -12,14 +15,36 @@
     remove: true
   with_items: "{{ otros_usuarios_innecesarios }}"
   when: otros_usuarios_innecesarios is defined
+  notify:
+    - Reiniciar_host
+
 - name: Eliminación de grupos innecesarios
   become: true
   ansible.builtin.group:
     name: "{{ item }}"
     state: absent
   with_items: "{{ grupos_innecesarios }}"
+  notify:
+    - Reiniciar_host
+
 - name: Asignando shell a usuarios
   ansible.builtin.user:
     name: "{{ item.user }}"
     shell: "{{ item.shell }}"
   loop: "{{ shell_usuarios }}"
+  notify:
+    - Reiniciar_host
+
+- name: Obtener lista de usuarios con UID >= 1000
+  ansible.builtin.command: awk -F{{ ':' }} '$3 >= 1000 && $1 != "nobody" &&  $1 != "nfsnobody" {print $1}' /etc/passwd
+  register: usuarios_normales
+  changed_when: false
+
+- name: Asignar la shell /bin/bash a los usuarios con UID >= 1000
+  become: true
+  ansible.builtin.user:
+    name: "{{ item }}"
+    shell: "/bin/bash"
+  loop: "{{ usuarios_normales.stdout_lines }}"
+  notify:
+    - Reiniciar_host

@@ -1,0 +1,19 @@
+- name: Configuración del sistema de ficheros y permisos para /boot
+  become: true
+  ansible.builtin.lineinfile:
+    backup: true
+    dest: /etc/fstab
+    regexp: '^UUID=(.*)/boot\s+([a-zA-Z\d]+)+\s+'
+    line: 'UUID=\1/boot\t\2\tdefaults,noexec,nodev,nosuid,noauto\t1 2'
+    backrefs: true
+  notify: Reiniciar_host
+
+- name: Configuración del sistema de ficheros y permisos para /boot/efi
+  become: true
+  ansible.builtin.lineinfile:
+    backup: true
+    dest: /etc/fstab
+    regexp: '^UUID=(.*)/boot/efi\s+([a-zA-Z\d]+)+\s+'
+    line: 'UUID=\1/boot\t\2\tdefaults,noexec,nodev,nosuid,noauto\t1 2'
+    backrefs: true
+  notify: Reiniciar_host

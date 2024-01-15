@@ -1,0 +1,8 @@
+- name: Obtener lista de usuarios sin contraseña
+  become: true
+  ansible.builtin.command: awk -F{{ ':' }} '$2 == "" {print$1}' /etc/shadow
+  register: users_without_password
+  changed_when: users_without_password.stdout != ""
+  notify:
+    - Bloquear_password_de_usuarios_sin_password
+    - Mostrar_usuarios_sin_password

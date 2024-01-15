@@ -1,6 +1,8 @@
 - name: Update_dconf
   become: true
   ansible.builtin.command: dconf update
+  register: update_dconf_output
+  changed_when: update_dconf_output.rc == 0
 - name: Restart_display-manager
   become: true
   ansible.builtin.systemd:

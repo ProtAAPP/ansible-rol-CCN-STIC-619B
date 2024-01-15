@@ -1,8 +1,0 @@
-- name: Configuración del sistema de ficheros y permisos
-  become: true
-  ansible.builtin.lineinfile:
-    backup: true
-    dest: /etc/fstab
-    regexp: '^UUID=(.*)/boot\s+([a-zA-Z\d]+)+\s+'
-    line: 'UUID=\1/boot\t\2\tnoauto,noexec,nodev,nosuid,ro\t1 2'
-    backrefs: true

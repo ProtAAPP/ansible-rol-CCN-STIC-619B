@@ -1,4 +1,4 @@
-# COMENTARIO: Se realiza el backup del fichero /etc/security/limits.conf mediante una tarea debido a que el backup del módulo pam_limits no funciona correctamente
+# COMENTARIO: Se hace el backup del fichero /etc/security/limits.conf mediante una tarea debido a que el backup del módulo pam_limits no funciona correctamente
 - name: Hacer backup del fichero /etc/security/limits.conf
   become: true
   ansible.builtin.copy:
@@ -42,7 +42,7 @@
     - { search: "PASS_MIN_DAYS", replace: "PASS_MIN_DAYS 2" }
     - { search: "PASS_WARN_AGE", replace: "PASS_WARN_AGE 10" }
     - { search: "PASS_MIN_LEN", replace: "PASS_MIN_LEN {{ PASS_MIN_LEN }}" }
-    - { search: "ENCRYPT_METHOD", replace: "ENCRYPT_METHOD  SHA512" }
+    - { search: "^ENCRYPT_METHOD.*", replace: "ENCRYPT_METHOD SHA512" }
     - { search: "^UMASK.*", replace: "UMASK 027" }
   notify:
     - Reiniciar_host
@@ -71,12 +71,11 @@
 
 - name: Modificar la caducidad de la clave y forzar su cambio para los usuarios con parámetros de caducidad de la clave incorrectos
   become: true
-  # COMENTARIO: Si se caduca la contraseña del usuario que ejecuta el comando chage, deja de tener permisos para seguir ejecutando el playbook
   ansible.builtin.shell: |
     grep "{{ item }}:[^:]*:[0-9]*:2:{{ PASS_MAX_DAYS }}:10:" /etc/shadow > /dev/null 2>%1
     if [ $? -eq 1 ]
     then
-      /usr/bin/chage -m 2 -M {{ PASS_MAX_DAYS }} -W 10 -d 0 "{{ item }}"
+      /usr/bin/chage -m 2 -M {{ PASS_MAX_DAYS }} -W 10 -d $(( $(date +%s) / 86400 - {{ PASS_MAX_DAYS }} )) "{{ item }}"
       echo $?
     fi
   loop: "{{ users_list.stdout_lines }}"

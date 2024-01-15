@@ -1,0 +1,16 @@
+- name: Comprobar si uefi está instalado
+  ansible.builtin.stat:
+    path: /sys/firmware/efi
+  register: uefi
+
+- name: Montar /boot
+  become: true
+  ansible.builtin.shell: ( mountpoint -q /boot && mount /boot -o remount,rw ) || mount /boot -o rw
+  changed_when: false
+  when: not uefi.stat.exists
+
+- name: Montar /boot/efi
+  become: true
+  ansible.builtin.shell: ( mountpoint -q /boot/efi && mount /boot/efi -o remount,rw ) || mount /boot/efi -o rw
+  changed_when: false
+  when: uefi.stat.exists
