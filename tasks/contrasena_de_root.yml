@@ -10,4 +10,15 @@
     fi
   register: root_pass_change_params
   changed_when: root_pass_change_params.stdout == "0"
-  notify: Forzar_cambio_de_password_de_root
+  notify:
+    - Obtener_parametros_de_password_de_root
+
+- name: Comprobar si está caducada la password de root
+  become: true
+  ansible.builtin.shell: |
+    test $(awk -F{{ ':' }} '$1 == "root" {print $3==""?"0":$3}' /etc/shadow) -ge $(( $(date +%s) / 86400 - {{ PASS_MAX_DAYS }} ))
+  register: caducidad_password_de_root
+  failed_when: false
+  changed_when: caducidad_password_de_root.rc != 0
+  notify:
+    - Forzar_cambio_de_password_de_root

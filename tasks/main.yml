@@ -31,8 +31,12 @@
     - name: CCN-STIC-619B-ENS_Paso4_limites_permisos_y_cad_contraseñas_B
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
+    - name: Banner disuasorio
+      ansible.builtin.include_tasks: banner.yml
+
     - name: CCN-STIC-619B-ENS_Paso5_parametros_gnome
       ansible.builtin.include_tasks: parametros_gnome.yml
+      when: '"gnome" in ansible_run_tags'
 
     - name: Aplicación de actualizaciones
       ansible.builtin.include_tasks: aplicacion_de_actualizaciones.yml
@@ -80,8 +84,12 @@
     - name: CCN-STIC-619B-ENS_Paso6_limites_permisos_y_cad_contraseñas_M
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
+    - name: Banner disuasorio
+      ansible.builtin.include_tasks: banner.yml
+
     - name: CCN-STIC-619B-ENS_Paso7_parametros_gnome
       ansible.builtin.include_tasks: parametros_gnome_categoria_media_y_alta.yml
+      when: '"gnome" in ansible_run_tags'
 
     - name: Aplicación de actualizaciones
       ansible.builtin.include_tasks: aplicacion_de_actualizaciones.yml
@@ -133,8 +141,12 @@
     - name: CCN-STIC-619B-ENS_Paso7_limites_permisos_y_cad_contraseñas_A
       ansible.builtin.include_tasks: limites_permisos_y_cad_claves.yml
 
+    - name: Banner disuasorio
+      ansible.builtin.include_tasks: banner.yml
+
     - name: CCN-STIC-619B-ENS_Paso8_parametros_gnome
       ansible.builtin.include_tasks: parametros_gnome_categoria_media_y_alta.yml
+      when: '"gnome" in ansible_run_tags'
 
     - name: Aplicación de actualizaciones
       ansible.builtin.include_tasks: aplicacion_de_actualizaciones.yml

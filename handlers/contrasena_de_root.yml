@@ -1,10 +1,16 @@
 ---
+- name: Comprobar_caducidad_password_de_root
+  ansible.builtin.command: test $(awk -F':' '$1 == "root" {print $3}' /etc/shadow) -gt $(( $(date +%s) / 86400 - {{ PASS_MAX_DAYS }}))
+  register: caducidad_password_de_root
+  changed_when: caducidad_password_de_root.rc != 0
+  notify: Forzar_cambio_de_password_de_root
+
 - name: Forzar_cambio_de_password_de_root
   become: true
   ansible.builtin.user:
     name: root
     password: "{{ root_pass | password_hash('sha512') }}"
-  register: root_pass
+  # register: root_pass
   notify: Obtener_parametros_de_password_de_root
 
 - name: Obtener_parametros_de_password_de_root
