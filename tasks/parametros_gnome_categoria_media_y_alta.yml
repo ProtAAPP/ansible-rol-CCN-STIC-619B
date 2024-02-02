@@ -2,8 +2,8 @@
   ansible.builtin.include_tasks: parametros_gnome.yml
 
 - name: Configurar tiempo de inactividad (power) para equipos portátiles
-  tags:
-    - portatiles
+#  tags:
+#    - portatiles
   become: true
   ansible.builtin.template:
     src: "{{ item.src }}"

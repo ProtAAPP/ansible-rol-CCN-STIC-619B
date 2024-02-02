@@ -27,7 +27,7 @@
   notify:
     - Reiniciar_host
 
-- name: Asignando shell a usuarios
+- name: Asignando shell a usuarios root, shutdown y halt
   ansible.builtin.user:
     name: "{{ item.user }}"
     shell: "{{ item.shell }}"

@@ -4,7 +4,7 @@
   ansible.builtin.user:
     name: root
     password: "{{ root_pass | password_hash('sha512') }}"
-  register: root_pass
+  # register: root_pass
   notify: Obtener_parametros_de_password_de_root
 
 - name: Obtener_parametros_de_password_de_root

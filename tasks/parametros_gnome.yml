@@ -23,7 +23,7 @@
       dest: /etc/dconf/profile/gdm
   notify: Aplicar_cambios_parametros_gnome
 
-- name: Crear banner
+- name: Crear banner para gnome
   become: true
   ansible.builtin.template:
     src: "{{ item.src }}"
@@ -33,12 +33,6 @@
   loop:
     - src: 01-banner-message.j2
       dest: /etc/dconf/db/gdm.d/01-banner-message
-    - src: banner.j2
-      dest: /etc/issue.net
-    - src: banner.j2
-      dest: /etc/issue
-    - src: banner.j2
-      dest: /etc/motd
   notify: Aplicar_cambios_parametros_gnome
 
 - name: No mostrar lista de usuarios en el login
