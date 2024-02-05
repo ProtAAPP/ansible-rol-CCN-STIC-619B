@@ -10,14 +10,14 @@
     - Reiniciar_audit
 - name: Configuración del fichero auditd.conf
   become: true
-  ansible.builtin.lineinfile:
+  ansible.builtin.replace:
     dest: /etc/audit/auditd.conf
     regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
+    replace: "{{ item.line }}"
     backup: true
   loop:
-    - { regexp: '^max_log_file .*', line: "max_log_file = {{ max_log_file }}" }
-    - { regexp: '^num_logs.*', line: "num_logs = {{ num_logs }}" }
+    - { regexp: '^max_log_file\s*=\s*[0][0-9]*\s*$', line: "max_log_file = {{ max_log_file }}" }
+    - { regexp: '^num_logs\s*=\s*[0][0-9]*\s*$', line: "num_logs = {{ num_logs }}" }
     - { regexp: '^max_log_file_action.*', line: "max_log_file_action = {{ max_log_file_action }}" }
   notify:
     - Reiniciar_audit
