@@ -4,7 +4,7 @@
     name: yum-utils
     state: present
 
-- name: Eliminar paquetes instalados como dependencias que ya no son necesarias
+- name: Eliminar paquetes instalados como dependencias que ya no son necesarios
   become: true
   ansible.builtin.dnf:
     autoremove: true
@@ -13,18 +13,23 @@
   become: true
   ansible.builtin.command: dnf clean all
   register: comando_output
-  changed_when: comando_output.rc == 0
+  changed_when: comando_output.stdout | regex_search('^[1-9][0-9]*') and comando_output.rc == 0
 
-- name: Limpiar paquetes huérfanos
-  become: true
-  ansible.builtin.shell:
-    cmd: "dnf -y remove `package-cleanup --orphans`"
-  register: comando_output
-  changed_when: comando_output.rc == 0
+- name: Buscar paquetes huérfanos
+  ansible.builtin.command: "package-cleanup --orphans"
+  register: paquetes_huerfanos
+  changed_when: false
 
-- name: Limpiar paquetes sueltos
+- name: Buscar paquetes que son dependencias sin uso (leaf nodes)
+  ansible.builtin.command: "package-cleanup --leaves"
+  register: paquetes_hoja
+  changed_when: false
+
+- name: Eliminar paquetes huerfanos y dependencias sin uso
   become: true
-  ansible.builtin.shell:
-    cmd: "dnf -y remove `package-cleanup --leaves`"
-  register: comando_output
-  changed_when: comando_output.rc == 0
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ paquetes_huerfanos.stdout | split }}"
+    - "{{ paquetes_hoja.stdout | split }}"
