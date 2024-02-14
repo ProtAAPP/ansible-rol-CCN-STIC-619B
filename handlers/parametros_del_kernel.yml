@@ -2,6 +2,7 @@
   ansible.builtin.command: cat /etc/sysctl.conf
   register: contenido_fichero_sysctl_conf
   changed_when: false
+  check_mode: false
 - name: Ver_contenido_fichero_sysctl.conf
   ansible.builtin.debug:
     var: contenido_fichero_sysctl_conf.stdout_lines

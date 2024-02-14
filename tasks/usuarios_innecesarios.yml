@@ -39,6 +39,7 @@
   ansible.builtin.command: awk -F{{ ':' }} '$3 >= 1000 && $1 != "nobody" &&  $1 != "nfsnobody" {print $1}' /etc/passwd
   register: usuarios_normales
   changed_when: false
+  check_mode: false
 
 - name: Asignar la shell /bin/bash a los usuarios con UID >= 1000
   become: true

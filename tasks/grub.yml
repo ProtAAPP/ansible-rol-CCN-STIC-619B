@@ -6,6 +6,7 @@
   failed_when: pass_grub_set.stderr != ''
   changed_when: pass_grub_set.rc != 0
   notify: Configurar_usuario_y_password_de_root_en_grub
+  check_mode: false
 
 - name: Montar /boot o /boot/efi para modificar la configuración de grub
   ansible.builtin.include_tasks:
