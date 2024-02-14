@@ -10,6 +10,7 @@
     state: unmounted
   changed_when: false
   when: not uefi.stat.exists
+  check_mode: false
 
 - name: Desmontar /boot/efi al terminar la actualización de seguridad
   become: true
@@ -18,3 +19,4 @@
     state: unmounted
   changed_when: false
   when: uefi.stat.exists
+  check_mode: false

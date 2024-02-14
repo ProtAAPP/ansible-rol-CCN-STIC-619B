@@ -68,6 +68,7 @@
   ansible.builtin.command: awk -F{{ ':' }} '$1 != "nobody" && $3 >= 1000 {print $1}' /etc/passwd
   register: users_list
   changed_when: false
+  check_mode: false
 
 - name: Modificar la caducidad de la clave y forzar su cambio para los usuarios con parámetros de caducidad de la clave incorrectos
   become: true
@@ -87,6 +88,7 @@
   loop: "{{ users_list.stdout_lines }}"
   register: users_home_list
   changed_when: false
+  check_mode: false
 
 - name: Configurar los permisos de los directorios home de los usuarios con UID > 1000
   become: true

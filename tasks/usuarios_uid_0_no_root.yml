@@ -3,3 +3,4 @@
   register: users_uid0_list
   changed_when: users_uid0_list.stdout != ""
   notify: Mostrar_usuarios_con_uid0
+  check_mode: false

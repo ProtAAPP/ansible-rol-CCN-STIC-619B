@@ -6,3 +6,4 @@
   notify:
     - Bloquear_password_de_usuarios_sin_password
     - Mostrar_usuarios_sin_password
+  check_mode: false

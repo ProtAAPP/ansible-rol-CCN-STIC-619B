@@ -32,3 +32,4 @@
   changed_when: caducidad_password_de_root.rc != 0
   notify:
     - Forzar_cambio_de_password_de_root
+  check_mode: false
