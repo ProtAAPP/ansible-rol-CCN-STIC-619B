@@ -23,13 +23,14 @@
 #   notify:
 #    - Obtener_parametros_de_password_de_root
 
-- name: Comprobar si está caducada la password de root
+- name: Comprobar si la contraseña de root es segura
   become: true
   ansible.builtin.shell: |
-    test $(awk -F{{ ':' }} '$1 == "root" {print $3==""?"0":$3}' /etc/shadow) -ge $(( $(date +%s) / 86400 - {{ PASS_MAX_DAYS }} ))
-  register: caducidad_password_de_root
+    test $(awk -F: '$1 == "root" && $2 ~ /^\$6\$/ {print $2}' /etc/shadow)
+  register: algoritmo_password_root
   failed_when: false
-  changed_when: caducidad_password_de_root.rc != 0
+  changed_when: algoritmo_password_root.rc != 0
   notify:
+    - Notificar_password_insegura_de_root
     - Forzar_cambio_de_password_de_root
   check_mode: false
