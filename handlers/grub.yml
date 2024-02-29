@@ -5,6 +5,7 @@
     responses:
       (?i)password|contraseña: "{{ grub_root_pass }}"
   register: hash_grub_root_pass
+  check_mode: false
 
 - name: Anadir_root_y_su_password_a_superusers_en_grub
   become: true

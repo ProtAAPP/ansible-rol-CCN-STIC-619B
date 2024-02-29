@@ -22,9 +22,8 @@ Los playbooks de Ansible deben estar preparados para ser lanzados periódicament
    3. ens_alta
 
 Hay que tener en cuenta que el rol necesita de variables que han de ser definidas por quien vaya a ejecutar el playbook:
-* ansible_ssh_private_key. Indica la clave a usar para conectarse con cada servidor.
 * grub_root_pass. La contraseña de ususario root a configurar en grub. Se recomienda que esa contraseña se almacene encriptada haciendo uso de Ansible Vault.
-* root_pass. La contraseña del usuario root de cada máquina. El rol forzará el cambio de contraseña de root si no se cumplen los parámetros de seguridad indicados por la guía y si, en base a ellos, la contraseña estuviera caducada.
+* root_pass (opcional). La contraseña del usuario root de cada máquina. El rol forzará el cambio de contraseña de root si no se cumplen los parámetros de seguridad indicados por la guía.
 
 A la hora de ejecutar el rol habrá que indicar el nivel de categoría del ENS que han de cumplir los hosts donde se aplicará el bastionado. Ejemplo:
 
