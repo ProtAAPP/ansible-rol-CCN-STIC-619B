@@ -19,13 +19,11 @@
   ansible.builtin.command: "package-cleanup --orphans"
   register: paquetes_huerfanos
   changed_when: false
-  check_mode: false
 
 - name: Buscar paquetes que son dependencias sin uso (leaf nodes)
   ansible.builtin.command: "package-cleanup --leaves"
   register: paquetes_hoja
   changed_when: false
-  check_mode: false
 
 - name: Eliminar paquetes huerfanos y dependencias sin uso
   become: true
