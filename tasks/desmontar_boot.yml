@@ -3,7 +3,7 @@
     path: /sys/firmware/efi
   register: uefi
 
-- name: Desmontar /boot al terminar la actualización de seguridad
+- name: Desmontar /boot
   become: true
   ansible.posix.mount:
     path: /boot
@@ -12,7 +12,7 @@
   when: not uefi.stat.exists
   check_mode: false
 
-- name: Desmontar /boot/efi al terminar la actualización de seguridad
+- name: Desmontar /boot/efi
   become: true
   ansible.posix.mount:
     path: /boot/efi
