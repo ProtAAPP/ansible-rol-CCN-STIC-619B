@@ -2,10 +2,10 @@
   tags:
     - ens_basica
   vars:
-    - PASS_MAX_DAYS: 90
-    - PASS_MIN_LEN: 8
-    - IDLE_DELAY: 1800
-    - LOCK_DELAY: 1
+    pass_max_days: 90
+    pass_min_len: 8
+    idle_delay: 1800
+    lock_delay: 1
   block:
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
@@ -48,11 +48,11 @@
   tags:
     - ens_media
   vars:
-    - PASS_MAX_DAYS: 60
-    - UNLOCK_TIME: 3600
-    - PASS_MIN_LEN: 10
-    - IDLE_DELAY: 600
-    - LOCK_DELAY: 0
+    pass_max_days: 60
+    unlock_time: 3600
+    pass_min_len: 10
+    idle_delay: 600
+    lock_delay: 0
   block:
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
@@ -101,12 +101,11 @@
   tags:
     - ens_alta
   vars:
-    - PASS_MAX_DAYS: 45
-    - UNLOCK_TIME: 0
-    - PASS_MAX_DAYS: 45
-    - PASS_MIN_LEN: 12
-    - IDLE_DELAY: 600
-    - LOCK_DELAY: 0
+    pass_max_days: 45
+    unlock_time: 0
+    pass_min_len: 12
+    idle_delay: 600
+    lock_delay: 0
   block:
     - name: CCN-STIC-619B-ENS_Paso1_contraseña_grub
       ansible.builtin.include_tasks: grub.yml
