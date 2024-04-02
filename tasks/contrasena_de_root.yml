@@ -2,10 +2,10 @@
 - name: Configurar la caducidad de la clave de root
   become: true
   ansible.builtin.shell: |
-    grep "root:[^:]*:[0-9]*:2:{{ PASS_MAX_DAYS }}:10:" /etc/shadow > /dev/null 2>&1
+    grep "root:[^:]*:[0-9]*:2:{{ pass_max_days }}:10:" /etc/shadow > /dev/null 2>&1
     if [ $? -eq 1 ]
     then
-      /usr/bin/chage -m 2 -M {{ PASS_MAX_DAYS }} -W 10 root
+      /usr/bin/chage -m 2 -M {{ pass_max_days }} -W 10 root
       echo $?
     fi
   register: root_pass_change_params
@@ -17,7 +17,7 @@
 # - name: Configurar parámetros de caducidad de la clave de root
 #   ansible.builtin.user:
 #     name: root
-#     password_expire_max: "{{ PASS_MAX_DAYS }}"
+#     password_expire_max: "{{ pass_max_days }}"
 #     password_expire_min: 2
 #     password_expire_warn: 10
 #   notify:

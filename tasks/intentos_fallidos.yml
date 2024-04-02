@@ -10,7 +10,7 @@
     new_type: auth
     new_control: required
     new_module_path: pam_faillock.so
-    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time={{ unlock_time }}"
   loop:
     - password-auth
     - system-auth
@@ -25,7 +25,7 @@
     type: auth
     control: required
     module_path: pam_faillock.so
-    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+    module_arguments: "preauth silent audit deny=8 even_deny_root unlock_time={{ unlock_time }}"
   loop:
     - password-auth
     - system-auth
@@ -44,7 +44,7 @@
     new_type: auth
     new_control: "[default=die]"
     new_module_path: pam_faillock.so
-    module_arguments: "authfail deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+    module_arguments: "authfail deny=8 even_deny_root unlock_time={{ unlock_time }}"
   loop:
     - password-auth
     - system-auth
@@ -59,7 +59,7 @@
     type: auth
     control: "[default=die]"
     module_path: pam_faillock.so
-    module_arguments: "authfail deny=8 even_deny_root unlock_time={{ UNLOCK_TIME }}"
+    module_arguments: "authfail deny=8 even_deny_root unlock_time={{ unlock_time }}"
   loop:
     - password-auth
     - system-auth
