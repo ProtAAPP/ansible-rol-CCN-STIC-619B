@@ -38,10 +38,10 @@
     state: present
     backup: true
   with_items:
-    - { search: "pass_max_days", replace: "pass_max_days {{ pass_max_days }}" }
+    - { search: "PASS_MAX_DAYS", replace: "PASS_MAX_DAYS {{ pass_max_days }}" }
     - { search: "PASS_MIN_DAYS", replace: "PASS_MIN_DAYS 2" }
     - { search: "PASS_WARN_AGE", replace: "PASS_WARN_AGE 10" }
-    - { search: "pass_min_len", replace: "pass_min_len {{ pass_min_len }}" }
+    - { search: "PASS_MIN_LEN", replace: "PASS_MIN_LEN {{ pass_min_len }}" }
     - { search: "^ENCRYPT_METHOD.*", replace: "ENCRYPT_METHOD SHA512" }
     - { search: "^UMASK.*", replace: "UMASK 027" }
   notify:
