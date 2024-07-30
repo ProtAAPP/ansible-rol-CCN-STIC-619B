@@ -32,9 +32,11 @@
     file: parametros_del_kernel.yml
 
 - name: Reiniciar_host
+  throttle: 1
   become: true
   ansible.builtin.reboot:
     msg: "Reinicio lanzado por Ansible para aplicar políticas del ENS"
     pre_reboot_delay: 60
     post_reboot_delay: 60
+    reboot_timeout: 300
     # test_command: "whoami"
