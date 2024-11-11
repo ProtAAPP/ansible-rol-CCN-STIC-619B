@@ -24,3 +24,6 @@ shell_usuarios:
   - { user: 'root', shell: '/bin/bash' }
   - { user: 'shutdown', shell: '/sbin/shutdown' }
   - { user: 'halt', shell: '/sbin/halt' }
+
+shell_usuarios_especificos:
+#  - { user: 'usuario_especifico', shell: '/sbin/nologin'}
