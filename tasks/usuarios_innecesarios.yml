@@ -4,6 +4,7 @@
     name: "{{ item }}"
     state: absent
   with_items: "{{ usuarios_innecesarios }}"
+  when: usuarios_innecesarios is defined
   notify:
     - Reiniciar_host
 
@@ -24,6 +25,7 @@
     name: "{{ item }}"
     state: absent
   with_items: "{{ grupos_innecesarios }}"
+  when: grupos_innecesarios is defined
   notify:
     - Reiniciar_host
 
@@ -46,6 +48,16 @@
   ansible.builtin.user:
     name: "{{ item }}"
     shell: "/bin/bash"
-  loop: "{{ usuarios_normales.stdout_lines }}"
+  with_items: "{{ usuarios_normales.stdout_lines | difference(shell_usuarios_especificos | map('dict2items') | flatten | selectattr('key', '==', 'user') | map(attribute='value')) }}"
+  notify:
+    - Reiniciar_host
+
+- name: Asignar la shell específica a usuarios con UID >= 1000
+  become: true
+  ansible.builtin.user:
+    name: "{{ item.user }}"
+    shell: "{{ item.shell }}"
+  with_items: "{{ shell_usuarios_especificos }}"
+  when: shell_usuarios_especificos is defined and shell_usuarios_especificos != None
   notify:
     - Reiniciar_host

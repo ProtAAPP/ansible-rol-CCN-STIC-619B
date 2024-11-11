@@ -95,5 +95,5 @@
   ansible.builtin.file:
     path: "{{ item.stdout }}"
     state: directory
-    mode: "g-rwx,o-rwx"
+    mode: "g-wx,o-rwx"
   with_items: "{{ users_home_list.results }}"
