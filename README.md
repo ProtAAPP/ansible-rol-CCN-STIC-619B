@@ -24,6 +24,16 @@ Los playbooks de Ansible deben estar preparados para ser lanzados periódicament
 Hay que tener en cuenta que el rol necesita de variables que han de ser definidas por quien vaya a ejecutar el playbook:
 * grub_root_pass. La contraseña de ususario root a configurar en grub. Se recomienda que esa contraseña se almacene encriptada haciendo uso de Ansible Vault.
 * root_pass (opcional). La contraseña del usuario root de cada máquina. El rol forzará el cambio de contraseña de root si no se cumplen los parámetros de seguridad indicados por la guía.
+* reboot_test_command (opcional). Comando a ejecutar para corroborar que la máquina (o un servicio de la máquina) se ha reiniciado correctamente.
+
+También el rol permite que se sobrescriban otras variables para adaptarse a las peculiaridades de cada máquina o grupo de máquinas:
+* banner. El banner que mostrar en las máquinas bastionadas.
+* usuarios_innecesarios. Lista de usuarios que no han de existir en la máquina.
+* otros_usuarios_innecesarios. Lista de usuarios a eliminar junto con el contenido de su home y correo.
+* grupos_innecesarios. Lista de grupos que no han de existir en la máquina.
+* shell_usuarios_especificos. Lista de usuarios específicos con UID a los que asignar una shell en concreto diferente de bash.
+* demonios_y_procesos_innecesarios. Demonios y procesos que no son necesarios en la máquina o grupos de máquinas.
+
 
 A la hora de ejecutar el rol habrá que indicar el nivel de categoría del ENS que han de cumplir los hosts donde se aplicará el bastionado. Ejemplo:
 
