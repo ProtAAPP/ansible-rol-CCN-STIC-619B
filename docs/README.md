@@ -13,3 +13,5 @@ En esta sección, se enlazan proyectos o documentos que puedan ser interesantes,
 La colección de *[hardening](https://github.com/dev-sec/ansible-collection-hardening)* de dev-sec realiza funciones muy parecidas a las que queremos realizar aquí, y sabe diferenciar entre diferentes sabores de Linux.
 
 Otro repositorio que puede valer la pena explorar lo mantiene (o mantenía hasta 2016) *[BlackBaud](https://github.com/blackbaud/ansible-role-linux-hardening)*. Dice intentar ajustarse a los estándares CIS (del momento, claro).
+
+Un montón de implementaciones de perfiles en función del sistema operativo, cortesía de *[Compliance as Code](https://complianceascode.github.io/content-pages/guides/index.html)*. En un buen número de casos se proporcionan *snippets* para utilizar en Ansible. 
