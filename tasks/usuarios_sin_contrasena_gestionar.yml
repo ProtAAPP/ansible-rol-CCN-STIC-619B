@@ -1,11 +1,12 @@
 # Se bloquea la password del usuario y falla la tarea para notificar el problema
-- name: Bloquear_password_de_usuarios_sin_password
+- name: Bloquear contraseña de usuarios sin password
   become: true
   ansible.builtin.user:
     name: "{{ item }}"
     password_lock: true
   with_items: "{{ users_without_password.stdout_lines }}"
-- name: Mostrar_usuarios_sin_password
+
+- name: Mostrar usuarios sin contraseña
   ansible.builtin.debug:
     var: users_without_password.stdout_lines
   failed_when: true

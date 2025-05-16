@@ -2,5 +2,10 @@
   ansible.builtin.command: awk -F{{ ':' }} '$1 != "root" && $3 == 0 {print $1}' /etc/passwd
   register: users_uid0_list
   changed_when: users_uid0_list.stdout != ""
-  notify: Mostrar_usuarios_con_uid0
   check_mode: false
+
+- name: Mostrar_usuarios_con_uid0
+  ansible.builtin.debug:
+    var: users_uid0_list.stdout_lines
+  failed_when: true
+  when: users_uid0_list.changed

@@ -6,7 +6,7 @@
     regexp: '^UUID=(.*)/boot\s+([a-zA-Z\d]+)+\s+'
     line: 'UUID=\1/boot\t\2\tnoauto,noexec,nodev,nosuid,ro\t1 2'
     backrefs: true
-  notify: Reiniciar_host
+  notify: 619B_Reiniciar_host
 
 - name: Configuración del sistema de ficheros y permisos para /boot/efi
   become: true
@@ -16,4 +16,4 @@
     regexp: '^UUID=(.*)/boot/efi\s+([a-zA-Z\d]+)+\s+'
     line: 'UUID=\1/boot/efi\t\2\tumask=0077,shortname=winnt\t0 0'
     backrefs: true
-  notify: Reiniciar_host
+  notify: 619B_Reiniciar_host

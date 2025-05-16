@@ -6,7 +6,7 @@
   with_items: "{{ usuarios_innecesarios }}"
   when: usuarios_innecesarios is defined
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Eliminación de otros usuarios innecesarios
   become: true
@@ -17,7 +17,7 @@
   with_items: "{{ otros_usuarios_innecesarios }}"
   when: otros_usuarios_innecesarios is defined
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Eliminación de grupos innecesarios
   become: true
@@ -27,7 +27,7 @@
   with_items: "{{ grupos_innecesarios }}"
   when: grupos_innecesarios is defined
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Asignando shell a usuarios root, shutdown y halt
   ansible.builtin.user:
@@ -35,7 +35,7 @@
     shell: "{{ item.shell }}"
   loop: "{{ shell_usuarios }}"
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Obtener lista de usuarios con UID >= 1000
   ansible.builtin.command: awk -F{{ ':' }} '$3 >= 1000 && $1 != "nobody" &&  $1 != "nfsnobody" {print $1}' /etc/passwd
@@ -50,7 +50,7 @@
     shell: "/bin/bash"
   with_items: "{{ usuarios_normales.stdout_lines | difference(shell_usuarios_especificos | map('dict2items') | flatten | selectattr('key', '==', 'user') | map(attribute='value')) }}"
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Asignar la shell específica a usuarios con UID >= 1000
   become: true
@@ -60,4 +60,5 @@
   with_items: "{{ shell_usuarios_especificos }}"
   when: shell_usuarios_especificos is defined and shell_usuarios_especificos != None
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
+

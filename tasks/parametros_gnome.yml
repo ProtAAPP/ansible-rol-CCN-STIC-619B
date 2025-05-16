@@ -21,7 +21,7 @@
       dest: /etc/dconf/profile/user
     - src: gdm.j2
       dest: /etc/dconf/profile/gdm
-  notify: Aplicar_cambios_parametros_gnome
+  notify: 619B_Aplicar_cambios_parametros_gnome
 
 - name: Crear banner para gnome
   become: true
@@ -33,7 +33,7 @@
   loop:
     - src: 01-banner-message.j2
       dest: /etc/dconf/db/gdm.d/01-banner-message
-  notify: Aplicar_cambios_parametros_gnome
+  notify: 619B_Aplicar_cambios_parametros_gnome
 
 - name: No mostrar lista de usuarios en el login
   become: true
@@ -42,7 +42,7 @@
     dest: /etc/dconf/db/gdm.d/00-login-screen
     mode: '0644'
     backup: true
-  notify: Aplicar_cambios_parametros_gnome
+  notify: 619B_Aplicar_cambios_parametros_gnome
 
 - name: Limitar el tiempo de inactividad de la pantalla
   become: true
@@ -58,4 +58,4 @@
       dest: /etc/dconf/db/local.d/locks/screensaver
     - src: 03-privacy.j2
       dest: /etc/dconf/db/local.d/03-privacy
-  notify: Aplicar_cambios_parametros_gnome
+  notify: 619B_Aplicar_cambios_parametros_gnome

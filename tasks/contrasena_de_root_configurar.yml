@@ -1,0 +1,14 @@
+---
+- name: Notificar contraseña insegura de root
+  ansible.builtin.debug:
+    msg: "La contraseña de root no está protegida con SHA-512"
+  failed_when: true
+  when: root_pass is not defined
+
+- name: Forzar cambio de contraseña de root
+  become: true
+  ansible.builtin.user:
+    name: root
+    password: "{{ root_pass | password_hash('sha512') }}"
+  when: root_pass is defined
+

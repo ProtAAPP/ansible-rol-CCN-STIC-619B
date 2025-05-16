@@ -27,7 +27,7 @@
     - soft
     - hard
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Duración, longitud y cifrado de la clave
   become: true
@@ -45,7 +45,7 @@
     - { search: "^ENCRYPT_METHOD.*", replace: "ENCRYPT_METHOD SHA512" }
     - { search: "^UMASK.*", replace: "UMASK 027" }
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Complejidad de la clave
   become: true
@@ -62,7 +62,7 @@
     - { search: "lcredit", replace: "lcredit = -1" }
     - { search: "ocredit", replace: "ocredit = -1" }
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Obtener lista de usuarios con UID > 1000
   ansible.builtin.command: awk -F{{ ':' }} '$1 != "nobody" && $3 >= 1000 {print $1}' /etc/passwd

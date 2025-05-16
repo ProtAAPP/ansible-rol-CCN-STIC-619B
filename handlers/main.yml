@@ -1,37 +1,13 @@
 ---
-- name: Configurar_usuario_y_password_de_root_en_grub
+- name: 619B_Reiniciar_audit
   ansible.builtin.include_tasks:
-    file: grub.yml
+    file: handler_reglas_audit.yml
 
-- name: Contrasena_de_root
-  ansible.builtin.import_tasks:
-    file: contrasena_de_root.yml
-
-- name: Usuarios_sin_contrasena
-  ansible.builtin.import_tasks:
-    file: usuarios_sin_contrasena.yml
-
-- name: Mostrar_usuarios_con_uid0
-  ansible.builtin.import_tasks:
-    file: usuarios_uid_0_no_root.yml
-
-- name: Reiniciar_audit
+- name: 619B_Aplicar_cambios_parametros_gnome
   ansible.builtin.include_tasks:
-    file: reglas_audit.yml
+    file: handler_parametros_gnome.yml
 
-- name: Aplicar_cambios_parametros_gnome
-  ansible.builtin.include_tasks:
-    file: parametros_gnome.yml
-
-- name: Mostrar_actualizaciones_aplicadas
-  ansible.builtin.include_tasks:
-    file: aplicacion_de_actualizaciones.yml
-
-- name: Mostrar_configuracion_parametros_kernel
-  ansible.builtin.include_tasks:
-    file: parametros_del_kernel.yml
-
-- name: Reiniciar_host
+- name: 619B_Reiniciar_host
   throttle: 1
   become: true
   ansible.builtin.reboot:
