@@ -21,4 +21,4 @@
     - name: Mostrar lista de reglas de audit
       ansible.builtin.debug:
         var: lista_reglas_audit.stdout_lines
-      when: lista_reglas_audit.stdout != ""
+      when: lista_reglas_audit.rc == 0 and lista_reglas_audit.stdout != ""
