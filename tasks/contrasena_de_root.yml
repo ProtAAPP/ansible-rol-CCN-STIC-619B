@@ -10,8 +10,17 @@
     fi
   register: root_pass_change_params
   changed_when: root_pass_change_params.stdout == "0"
-  notify:
-    - Obtener_parametros_de_password_de_root
+
+- name: Obtener parámetros de password de root
+  become: true
+  ansible.builtin.command: /usr/bin/chage -l root
+  register: chage_root_output
+  changed_when: false
+
+- name: Mostrar parámetros de password de root
+  ansible.builtin.debug:
+    var: chage_root_output.stdout_lines
+  when: chage_root_output.stdout != ""
 
 # A partir de ansible-core 2.16 se puede usar el módulo user para configurar todos los parámetros de las claves de usuario
 # - name: Configurar parámetros de caducidad de la clave de root
@@ -30,7 +39,8 @@
   register: algoritmo_password_root
   failed_when: false
   changed_when: algoritmo_password_root.rc != 0
-  notify:
-    - Notificar_password_insegura_de_root
-    - Forzar_cambio_de_password_de_root
   check_mode: false
+
+- name: Configurar contraseña de root
+  ansible.builtin.include_tasks: contrasena_de_root_configurar.yml
+  when: algoritmo_password_root.changed

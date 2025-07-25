@@ -6,7 +6,7 @@
     masked: true
   with_items: "{{ demonios_y_procesos_innecesarios }}"
   notify:
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
 - name: Obtener_facts_de_todos_los_servicios
   ansible.builtin.service_facts:

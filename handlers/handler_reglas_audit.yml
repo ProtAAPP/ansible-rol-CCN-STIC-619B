@@ -1,5 +1,5 @@
 ---
-- name: Reiniciar_servicio_audit
+- name: Reiniciar servicio audit
   become: true
   ansible.builtin.command: service auditd restart
   # COMENTARIO: Los módulos service y systemd no reiniciaban correctamente el servicio auditd, por lo que se usa el módulo command
@@ -9,13 +9,16 @@
   #  use: service
   register: reiniciar_servicio_audit_output # <- Registers the command output.
   changed_when: reiniciar_servicio_audit_output.rc == 0
-- name: Listar_reglas_audit
+
+- name: Listar reglas audit
   block:
     - name: Obtener reglas audit
       become: true
       ansible.builtin.command: auditctl -l
       register: lista_reglas_audit
-      changed_when: lista_reglas_audit.rc == 0
+      changed_when: false
+      check_mode: false
     - name: Mostrar lista de reglas de audit
       ansible.builtin.debug:
         var: lista_reglas_audit.stdout_lines
+      when: lista_reglas_audit.rc == 0 and lista_reglas_audit.stdout != ""

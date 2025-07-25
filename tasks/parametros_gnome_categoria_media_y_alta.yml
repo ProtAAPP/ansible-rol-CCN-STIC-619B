@@ -15,7 +15,7 @@
       dest: /etc/dconf/db/local.d/05-power
     - src: power.j2
       dest: /etc/dconf/db/local.d/locks/power
-  notify: Aplicar_cambios_parametros_gnome
+  notify: 619B_Aplicar_cambios_parametros_gnome
   when:
     - '"portatiles" in ansible_run_tags'
 
@@ -39,4 +39,4 @@
   with_items:
     - TMOUT=600
     - export TMOUT
-  notify: Aplicar_cambios_parametros_gnome
+  notify: 619B_Aplicar_cambios_parametros_gnome

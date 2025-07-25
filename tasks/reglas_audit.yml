@@ -7,7 +7,8 @@
     mode: '0600'
   register: reglas_audit_resultado
   notify:
-    - Reiniciar_audit
+    - 619B_Reiniciar_audit
+
 - name: Configuración del fichero auditd.conf
   become: true
   ansible.builtin.replace:
@@ -20,7 +21,8 @@
     - { regexp: '^num_logs\s*=\s*[0][0-9]*\s*$', line: "num_logs = {{ num_logs }}" }
     - { regexp: '^max_log_file_action.*', line: "max_log_file_action = {{ max_log_file_action }}" }
   notify:
-    - Reiniciar_audit
+    - 619B_Reiniciar_audit
+
 - name: Habilitar servicio auditd
   ansible.builtin.systemd:
     name: auditd

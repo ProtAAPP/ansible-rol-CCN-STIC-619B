@@ -1,3 +1,0 @@
-- name: Mostrar_actualizaciones
-  ansible.builtin.debug:
-    var: actualizaciones.results

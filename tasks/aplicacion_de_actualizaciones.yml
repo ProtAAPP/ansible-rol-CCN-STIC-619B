@@ -6,13 +6,17 @@
   become: true
   ansible.builtin.dnf:
     name: '*'
-    security: true
     state: latest
+    security: true
+    update_cache: true
   register: actualizaciones
   notify:
-    - Mostrar_actualizaciones_aplicadas
-    - Reiniciar_host
+    - 619B_Reiniciar_host
 
-- name: Desmontar /boot o /boot/efi después de modificar la configuración de grub
+- name: Mostrar actualizaciones aplicadas
+  ansible.builtin.include_tasks: aplicacion_de_actualizaciones_mostrar.yml
+  when: actualizaciones.changed
+
+- name: Desmontar /boot o /boot/efi después de aplicar las actualizaciones
   ansible.builtin.include_tasks:
     file: desmontar_boot.yml

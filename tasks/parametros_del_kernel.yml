@@ -19,5 +19,8 @@
     mode: '0644'
   register: parametros_kernel_modificados
   notify:
-    - Mostrar_configuracion_parametros_kernel
-    - Reiniciar_host
+    - 619B_Reiniciar_host
+
+- name: Mostrar configuración de los parámetros del kernel
+  ansible.builtin.include_tasks: parametros_del_kernel_mostrar_configuracion.yml
+  when: parametros_kernel_modificados.changed
