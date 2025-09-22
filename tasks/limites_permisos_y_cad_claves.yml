@@ -97,3 +97,4 @@
     state: directory
     mode: "g-wx,o-rwx"
   with_items: "{{ users_home_list.results }}"
+  when: item.item not in (permisos_home_usuarios_especificos | default([], true))

@@ -33,6 +33,7 @@ También el rol permite que se sobrescriban otras variables para adaptarse a las
 * grupos_innecesarios. Lista de grupos que no han de existir en la máquina.
 * shell_usuarios_especificos. Lista de usuarios específicos con UID a los que asignar una shell en concreto diferente de bash.
 * demonios_y_procesos_innecesarios. Demonios y procesos que no son necesarios en la máquina o grupos de máquinas.
+* permisos_home_usuarios_especificos. Usuarios con UID>1000 sobre los que no aplicar los permisos de home indicados en la guía.
 
 
 A la hora de ejecutar el rol habrá que indicar el nivel de categoría del ENS que han de cumplir los hosts donde se aplicará el bastionado. Ejemplo:
