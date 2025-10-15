@@ -86,6 +86,7 @@
 - name: Obtener los directorios home de los usuarios con UID > 1000
   ansible.builtin.command: "awk -F: -v user={{ item }} '$1==user {print $6}' /etc/passwd"
   loop: "{{ users_list.stdout_lines }}"
+  when: item not in (permisos_home_usuarios_especificos | default([], true))
   register: users_home_list
   changed_when: false
   check_mode: false
@@ -97,4 +98,4 @@
     state: directory
     mode: "g-wx,o-rwx"
   with_items: "{{ users_home_list.results }}"
-  when: item.item not in (permisos_home_usuarios_especificos | default([], true))
+  when: item.stdout is defined

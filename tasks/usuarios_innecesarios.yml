@@ -30,6 +30,7 @@
     - 619B_Reiniciar_host
 
 - name: Asignando shell a usuarios root, shutdown y halt
+  become: true
   ansible.builtin.user:
     name: "{{ item.user }}"
     shell: "{{ item.shell }}"
@@ -58,7 +59,11 @@
     name: "{{ item.user }}"
     shell: "{{ item.shell }}"
   with_items: "{{ shell_usuarios_especificos }}"
-  when: shell_usuarios_especificos is defined and shell_usuarios_especificos != None
+  when:
+    - shell_usuarios_especificos is defined
+    - shell_usuarios_especificos != None
+    - item.user in usuarios_normales.stdout_lines
+    - item.shell
   notify:
     - 619B_Reiniciar_host
 
