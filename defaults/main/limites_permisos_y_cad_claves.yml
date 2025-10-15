@@ -2,3 +2,5 @@ permisos_home_usuarios_especificos:
   - sophos-spl-user
   - sophos-spl-local
   - sophos-spl-updatescheduler
+  - sophos-spl-av
+  - sophos-spl-threat-detector

@@ -26,4 +26,8 @@ shell_usuarios:
   - { user: 'halt', shell: '/sbin/halt' }
 
 shell_usuarios_especificos:
-#  - { user: 'usuario_especifico', shell: '/sbin/nologin'}
+  - { user: 'sophos-spl-user', shell: '/bin/false' }
+  - { user: 'sophos-spl-local', shell: '/bin/false' }
+  - { user: 'sophos-spl-updatescheduler', shell: '/bin/false' }
+  - { user: 'sophos-spl-av', shell: '/bin/false' }
+  - { user: 'sophos-spl-threat-detector', shell: '/bin/false' }
